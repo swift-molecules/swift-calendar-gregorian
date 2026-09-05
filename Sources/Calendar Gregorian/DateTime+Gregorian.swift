@@ -22,12 +22,12 @@ extension Calendar::DateTime where Date == Gregorian.Date {
                 month: Gregorian.Month(unchecked: month),
                 day: Gregorian.Month.Day(unchecked: day)
             ),
-            hour: Time.Hour(unchecked: hour),
-            minute: Time.Minute(unchecked: minute),
-            second: Time.Second(unchecked: second),
-            millisecond: Time.Millisecond(unchecked: millisecond),
-            microsecond: Time.Microsecond(unchecked: microsecond),
-            nanosecond: Time.Nanosecond(unchecked: nanosecond)
+            hour: Time.Day.Hour(unchecked: hour),
+            minute: Time.Hour.Minute(unchecked: minute),
+            second: Time.Minute.Second(unchecked: second),
+            millisecond: Time.Second.Millisecond(unchecked: millisecond),
+            microsecond: Time.Millisecond.Microsecond(unchecked: microsecond),
+            nanosecond: Time.Microsecond.Nanosecond(unchecked: nanosecond)
         )
     }
 }
@@ -78,44 +78,44 @@ extension Calendar::DateTime where Date == Gregorian.Date {
             throw Error.dayOutOfRange(day, month: month.rawValue, year: year)
         }
 
-        let h: Time.Hour
-        do throws(Time.Hour.Error) {
-            h = try Time.Hour(hour)
+        let h: Time.Day.Hour
+        do throws(Time.Day.Hour.Error) {
+            h = try Time.Day.Hour(hour)
         } catch {
             throw Error.hourOutOfRange(hour)
         }
 
-        let min: Time.Minute
-        do throws(Time.Minute.Error) {
-            min = try Time.Minute(minute)
+        let min: Time.Hour.Minute
+        do throws(Time.Hour.Minute.Error) {
+            min = try Time.Hour.Minute(minute)
         } catch {
             throw Error.minuteOutOfRange(minute)
         }
 
-        let s: Time.Second
-        do throws(Time.Second.Error) {
-            s = try Time.Second(second)
+        let s: Time.Minute.Second
+        do throws(Time.Minute.Second.Error) {
+            s = try Time.Minute.Second(second)
         } catch {
             throw Error.secondOutOfRange(second)
         }
 
-        let ms: Time.Millisecond
-        do throws(Time.Millisecond.Error) {
-            ms = try Time.Millisecond(millisecond)
+        let ms: Time.Second.Millisecond
+        do throws(Time.Second.Millisecond.Error) {
+            ms = try Time.Second.Millisecond(millisecond)
         } catch {
             throw Error.millisecondOutOfRange(millisecond)
         }
 
-        let us: Time.Microsecond
-        do throws(Time.Microsecond.Error) {
-            us = try Time.Microsecond(microsecond)
+        let us: Time.Millisecond.Microsecond
+        do throws(Time.Millisecond.Microsecond.Error) {
+            us = try Time.Millisecond.Microsecond(microsecond)
         } catch {
             throw Error.microsecondOutOfRange(microsecond)
         }
 
-        let ns: Time.Nanosecond
-        do throws(Time.Nanosecond.Error) {
-            ns = try Time.Nanosecond(nanosecond)
+        let ns: Time.Microsecond.Nanosecond
+        do throws(Time.Microsecond.Nanosecond.Error) {
+            ns = try Time.Microsecond.Nanosecond(nanosecond)
         } catch {
             throw Error.nanosecondOutOfRange(nanosecond)
         }
@@ -214,7 +214,7 @@ extension Calendar::DateTime where Date == Gregorian.Date {
 extension Calendar::DateTime where Date == Gregorian.Date {
 
     public static func totalNanoseconds(
-        millisecond: Time.Millisecond, microsecond: Time.Microsecond, nanosecond: Time.Nanosecond
+        millisecond: Time.Second.Millisecond, microsecond: Time.Millisecond.Microsecond, nanosecond: Time.Microsecond.Nanosecond
     ) -> Int {
         Time.totalNanoseconds(millisecond: millisecond, microsecond: microsecond, nanosecond: nanosecond)
     }
@@ -277,15 +277,33 @@ extension Calendar::DateTime where Date == Gregorian.Date {
         year: Gregorian.Year,
         month: Gregorian.Month,
         day: Gregorian.Month.Day,
-        hour: Time.Hour = .zero,
-        minute: Time.Minute = .zero,
-        second: Time.Second = .zero,
-        millisecond: Time.Millisecond = .zero,
-        microsecond: Time.Microsecond = .zero,
-        nanosecond: Time.Nanosecond = .zero
+        hour: Time.Day.Hour = .zero,
+        minute: Time.Hour.Minute = .zero,
+        second: Time.Minute.Second = .zero,
+        millisecond: Time.Second.Millisecond = .zero,
+        microsecond: Time.Millisecond.Microsecond = .zero,
+        nanosecond: Time.Microsecond.Nanosecond = .zero
     ) throws(Gregorian.Month.Day.Error) {
         self.init(
             date: try Gregorian.Date(year: year, month: month, day: day),
+            hour: hour, minute: minute, second: second,
+            millisecond: millisecond, microsecond: microsecond, nanosecond: nanosecond
+        )
+    }
+}
+
+extension Calendar::DateTime where Date == Gregorian.Date {
+    public init(
+        date: Gregorian.Date,
+        hour: Int,
+        minute: Int = 0,
+        second: Int = 0,
+        millisecond: Int = 0,
+        microsecond: Int = 0,
+        nanosecond: Int = 0
+    ) throws(Gregorian.DateTime.Error) {
+        try self.init(
+            year: date.year.rawValue, month: date.month, day: date.day.rawValue,
             hour: hour, minute: minute, second: second,
             millisecond: millisecond, microsecond: microsecond, nanosecond: nanosecond
         )

@@ -10,14 +10,13 @@ import Time
 
 let calendar = Gregorian.calendar()
 let date = try Gregorian.Date(year: 2024, month: .february, day: 29)
-let tomorrow = try calendar.adding(days: 1, to: date)
-let elapsedDays = try calendar.distance(from: date, to: tomorrow)
+let tomorrow = try date + Gregorian.Day(1)
+let elapsedDays = try tomorrow - date
 let coordinate = try calendar.dayNumber(of: date)
 let restored = try calendar.date(on: coordinate)
 
 let civil = try Gregorian.DateTime(
-    year: 2024, month: .february, day: 29,
-    hour: 12, minute: 30,
+    date: date, hour: 12, minute: 30,
     millisecond: 123, microsecond: 456, nanosecond: 789
 )
 let instant = Instant(civil)
@@ -52,7 +51,9 @@ are extensions in this package. The date structure is not imposed on other calen
 | Civil Epoch and its six named reference definitions | Gregorian.Epoch = Time.Epoch<Gregorian.DateTime> |
 | Time.Epoch.Conversion | Gregorian.Conversion; also Gregorian.Epoch.Conversion |
 | Civil/Instant conversion and civil Codable | Gregorian integration; same Instant encoding |
-| Temporal components and all eight fractional types | Remain in Time |
+| Bounded Time.Hour, Time.Minute, Time.Second | Time.Day.Hour, Time.Hour.Minute, Time.Minute.Second |
+| Fractional clock components | Time.Second.Millisecond through Time.Zeptosecond.Yoctosecond |
+| Time.Minute.quantity(90) | Time.Minute(90); analogous for every elapsed unit |
 
 Year coordinates remain Int. Gregorian.dayNumber(of:) throws Calendar<Gregorian.Date>.Encode.Error.unsupported if the
 coordinate cannot fit Int64; date(on:) checks the resulting year representation.
@@ -74,7 +75,7 @@ calendar-dependent reference value. Downstream RFC migration remains separate.
 ## Exact fixed-offset interpretation
 
 ```swift
-let zone = try Time.Zone.hours(-5, minutes: 30)
+let zone = try Time.Zone(hours: -5, minutes: 30)
 let instant = try civil.instant(in: zone)
 let restored = try instant.gregorian(in: zone)
 assert(restored == civil)
@@ -93,3 +94,8 @@ its documented uniform-day normalization.
 Calendar distance now returns `DayNumber.Offset`, preserving the day domain and
 representing the entire Int64 minimum-to-maximum separation. `adding(days:to:)`
 accepts that typed offset; its integer overload remains a convenience boundary.
+
+`Gregorian.Day(1)` is a signed calendar-day step. Date addition, subtraction, and
+difference use checked Calendar coordinate operations. `Time.Day(1)` is a separate
+elapsed quantity of exactly 86,400 seconds. Date differences require `try` because
+a valid Gregorian date can lie outside the supported fixed-day coordinate range.

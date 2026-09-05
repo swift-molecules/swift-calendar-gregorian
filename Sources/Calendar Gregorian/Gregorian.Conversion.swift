@@ -19,7 +19,7 @@ extension Gregorian.Conversion {
 
     static func secondsSinceEpoch(
         year: Gregorian.Year, month: Gregorian.Month, day: Gregorian.Month.Day,
-        hour: Time.Hour, minute: Time.Minute, second: Time.Second
+        hour: Time.Day.Hour, minute: Time.Hour.Minute, second: Time.Minute.Second
     ) -> Int {
         let days = Gregorian.fixedDay(year: year, month: month, day: day) - unixEpochDay
         let seconds = days * Int128(Time.Conversion.secondsPerDay)

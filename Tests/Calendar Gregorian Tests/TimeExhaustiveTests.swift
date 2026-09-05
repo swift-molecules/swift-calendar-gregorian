@@ -176,17 +176,17 @@ struct `Time Exhaustive Tests` {
     func `Hour Validation - Boundary Cases`() throws {
 
         for hour in 0...23 {
-            _ = try Time.Hour(hour)
+            _ = try Time.Day.Hour(hour)
         }
 
-        #expect(throws: Time.Hour.Error.self) {
-            try Time.Hour(-1)
+        #expect(throws: Time.Day.Hour.Error.self) {
+            try Time.Day.Hour(-1)
         }
-        #expect(throws: Time.Hour.Error.self) {
-            try Time.Hour(24)
+        #expect(throws: Time.Day.Hour.Error.self) {
+            try Time.Day.Hour(24)
         }
-        #expect(throws: Time.Hour.Error.self) {
-            try Time.Hour(25)
+        #expect(throws: Time.Day.Hour.Error.self) {
+            try Time.Day.Hour(25)
         }
     }
 
@@ -194,17 +194,17 @@ struct `Time Exhaustive Tests` {
     func `Minute Validation - Boundary Cases`() throws {
 
         for minute in 0...59 {
-            _ = try Time.Minute(minute)
+            _ = try Time.Hour.Minute(minute)
         }
 
-        #expect(throws: Time.Minute.Error.self) {
-            try Time.Minute(-1)
+        #expect(throws: Time.Hour.Minute.Error.self) {
+            try Time.Hour.Minute(-1)
         }
-        #expect(throws: Time.Minute.Error.self) {
-            try Time.Minute(60)
+        #expect(throws: Time.Hour.Minute.Error.self) {
+            try Time.Hour.Minute(60)
         }
-        #expect(throws: Time.Minute.Error.self) {
-            try Time.Minute(61)
+        #expect(throws: Time.Hour.Minute.Error.self) {
+            try Time.Hour.Minute(61)
         }
     }
 
@@ -212,17 +212,17 @@ struct `Time Exhaustive Tests` {
     func `Second Validation - Boundary Cases Including Leap Second`() throws {
 
         for second in 0...60 {
-            _ = try Time.Second(second)
+            _ = try Time.Minute.Second(second)
         }
 
-        #expect(throws: Time.Second.Error.self) {
-            try Time.Second(-1)
+        #expect(throws: Time.Minute.Second.Error.self) {
+            try Time.Minute.Second(-1)
         }
-        #expect(throws: Time.Second.Error.self) {
-            try Time.Second(61)
+        #expect(throws: Time.Minute.Second.Error.self) {
+            try Time.Minute.Second(61)
         }
-        #expect(throws: Time.Second.Error.self) {
-            try Time.Second(62)
+        #expect(throws: Time.Minute.Second.Error.self) {
+            try Time.Minute.Second(62)
         }
     }
 
@@ -230,30 +230,30 @@ struct `Time Exhaustive Tests` {
     func `Sub-Second Validation - All Precision Levels`() throws {
 
         for value in 0...999 {
-            _ = try Time.Millisecond(value)
-            _ = try Time.Microsecond(value)
-            _ = try Time.Nanosecond(value)
+            _ = try Time.Second.Millisecond(value)
+            _ = try Time.Millisecond.Microsecond(value)
+            _ = try Time.Microsecond.Nanosecond(value)
         }
 
-        #expect(throws: Time.Millisecond.Error.self) {
-            try Time.Millisecond(-1)
+        #expect(throws: Time.Second.Millisecond.Error.self) {
+            try Time.Second.Millisecond(-1)
         }
-        #expect(throws: Time.Millisecond.Error.self) {
-            try Time.Millisecond(1000)
-        }
-
-        #expect(throws: Time.Microsecond.Error.self) {
-            try Time.Microsecond(-1)
-        }
-        #expect(throws: Time.Microsecond.Error.self) {
-            try Time.Microsecond(1000)
+        #expect(throws: Time.Second.Millisecond.Error.self) {
+            try Time.Second.Millisecond(1000)
         }
 
-        #expect(throws: Time.Nanosecond.Error.self) {
-            try Time.Nanosecond(-1)
+        #expect(throws: Time.Millisecond.Microsecond.Error.self) {
+            try Time.Millisecond.Microsecond(-1)
         }
-        #expect(throws: Time.Nanosecond.Error.self) {
-            try Time.Nanosecond(1000)
+        #expect(throws: Time.Millisecond.Microsecond.Error.self) {
+            try Time.Millisecond.Microsecond(1000)
+        }
+
+        #expect(throws: Time.Microsecond.Nanosecond.Error.self) {
+            try Time.Microsecond.Nanosecond(-1)
+        }
+        #expect(throws: Time.Microsecond.Nanosecond.Error.self) {
+            try Time.Microsecond.Nanosecond(1000)
         }
     }
 
