@@ -1,0 +1,362 @@
+import Testing
+
+@_spi(Internal) @testable import Time
+@_spi(Internal) @testable import Calendar
+@_spi(Internal) @testable import Calendar_Gregorian
+
+@Suite
+struct `Time Exhaustive Tests` {
+
+    @Test(
+        arguments: [400, 800, 1200, 1600, 2000, 2400]
+    )
+    func `Leap Year - Years divisible by 400`(year: Int) {
+        #expect(Gregorian.isLeapYear(Gregorian.Year(year)) == true)
+    }
+
+    @Test(
+        arguments: [
+            100, 200, 300, 500, 600, 700, 900, 1000, 1100, 1300, 1400, 1500, 1700, 1800, 1900, 2100,
+            2200, 2300,
+        ]
+    )
+    func `Leap Year - Years divisible by 100 but not 400`(year: Int) {
+        #expect(Gregorian.isLeapYear(Gregorian.Year(year)) == false)
+    }
+
+    @Test(
+        arguments: [
+            4, 8, 12, 16, 96, 104, 196, 204, 296, 304, 396, 404, 496, 504, 596, 604, 696, 704, 796,
+            804, 896, 904, 996, 1004, 1996, 2004, 2008, 2012, 2016, 2020, 2024, 2028,
+        ]
+    )
+    func `Leap Year - Years divisible by 4 but not 100`(year: Int) {
+        #expect(Gregorian.isLeapYear(Gregorian.Year(year)) == true)
+    }
+
+    @Test(
+        arguments: [
+            1, 2, 3, 5, 7, 11, 97, 101, 199, 201, 1001, 1997, 1998, 1999, 2001, 2002, 2003, 2005,
+            2006, 2007, 2009, 2010, 2011, 2013, 2014, 2015, 2017, 2018, 2019, 2021, 2022, 2023,
+            2025, 2026, 2027,
+        ]
+    )
+    func `Leap Year - Years not divisible by 4`(year: Int) {
+        #expect(Gregorian.isLeapYear(Gregorian.Year(year)) == false)
+    }
+
+    @Test(
+        arguments: [
+            (0, true),
+            (-4, true),
+            (-1, false),
+            (-100, false),
+            (-400, true),
+        ]
+    )
+    func `Leap Year - Special cases`(year: Int, isLeap: Bool) {
+        #expect(Gregorian.isLeapYear(Gregorian.Year(year)) == isLeap)
+    }
+
+    @Test
+    func `Days in Month - All Months in Leap Year`() {
+        let year = Gregorian.Year(2024)
+        let expected = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+        for month in 1...12 {
+            let days = Gregorian.daysInMonth(year, Gregorian.Month(unchecked: month))
+            #expect(
+                days == expected[month - 1],
+                "Month \(month) in leap year 2024 should have \(expected[month - 1]) days"
+            )
+        }
+    }
+
+    @Test
+    func `Days in Month - All Months in Non-Leap Year`() {
+        let year = Gregorian.Year(2023)
+        let expected = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+
+        for month in 1...12 {
+            let days = Gregorian.daysInMonth(year, Gregorian.Month(unchecked: month))
+            #expect(
+                days == expected[month - 1],
+                "Month \(month) in non-leap year 2023 should have \(expected[month - 1]) days"
+            )
+        }
+    }
+
+    @Test(
+        arguments: [
+            (2000, 29),
+            (2100, 28),
+            (2020, 29),
+            (2021, 28),
+            (2024, 29),
+            (2023, 28),
+            (1900, 28),
+            (2004, 29),
+        ]
+    )
+    func `Days in Month - February in various years`(year: Int, expectedDays: Int) {
+        let days = Gregorian.daysInMonth(
+            Gregorian.Year(year),
+            Gregorian.Month(unchecked: 2)
+        )
+        #expect(days == expectedDays)
+    }
+
+    @Test
+    func `Month Validation - Boundary Cases`() throws {
+
+        for month in 1...12 {
+            _ = try Gregorian.Month(month)
+        }
+
+        #expect(throws: Gregorian.Month.Error.self) {
+            try Gregorian.Month(0)
+        }
+        #expect(throws: Gregorian.Month.Error.self) {
+            try Gregorian.Month(13)
+        }
+        #expect(throws: Gregorian.Month.Error.self) {
+            try Gregorian.Month(-1)
+        }
+        #expect(throws: Gregorian.Month.Error.self) {
+            try Gregorian.Month(100)
+        }
+    }
+
+    @Test
+    func `Day Validation - All Valid Days in Each Month`() throws {
+        let year = Gregorian.Year(2024)
+
+        let jan = try Gregorian.Month(1)
+        for day in 1...31 {
+            _ = try Gregorian.Month.Day(day, in: jan, year: year)
+        }
+        #expect(throws: Gregorian.Month.Day.Error.self) {
+            try Gregorian.Month.Day(32, in: jan, year: year)
+        }
+
+        let feb = try Gregorian.Month(2)
+        for day in 1...29 {
+            _ = try Gregorian.Month.Day(day, in: feb, year: year)
+        }
+        #expect(throws: Gregorian.Month.Day.Error.self) {
+            try Gregorian.Month.Day(30, in: feb, year: year)
+        }
+
+        let nonLeapYear = Gregorian.Year(2023)
+        for day in 1...28 {
+            _ = try Gregorian.Month.Day(day, in: feb, year: nonLeapYear)
+        }
+        #expect(throws: Gregorian.Month.Day.Error.self) {
+            try Gregorian.Month.Day(29, in: feb, year: nonLeapYear)
+        }
+
+        let apr = try Gregorian.Month(4)
+        for day in 1...30 {
+            _ = try Gregorian.Month.Day(day, in: apr, year: year)
+        }
+        #expect(throws: Gregorian.Month.Day.Error.self) {
+            try Gregorian.Month.Day(31, in: apr, year: year)
+        }
+
+        let dec = try Gregorian.Month(12)
+        for day in 1...31 {
+            _ = try Gregorian.Month.Day(day, in: dec, year: year)
+        }
+        #expect(throws: Gregorian.Month.Day.Error.self) {
+            try Gregorian.Month.Day(32, in: dec, year: year)
+        }
+    }
+
+    @Test
+    func `Hour Validation - Boundary Cases`() throws {
+
+        for hour in 0...23 {
+            _ = try Time.Hour(hour)
+        }
+
+        #expect(throws: Time.Hour.Error.self) {
+            try Time.Hour(-1)
+        }
+        #expect(throws: Time.Hour.Error.self) {
+            try Time.Hour(24)
+        }
+        #expect(throws: Time.Hour.Error.self) {
+            try Time.Hour(25)
+        }
+    }
+
+    @Test
+    func `Minute Validation - Boundary Cases`() throws {
+
+        for minute in 0...59 {
+            _ = try Time.Minute(minute)
+        }
+
+        #expect(throws: Time.Minute.Error.self) {
+            try Time.Minute(-1)
+        }
+        #expect(throws: Time.Minute.Error.self) {
+            try Time.Minute(60)
+        }
+        #expect(throws: Time.Minute.Error.self) {
+            try Time.Minute(61)
+        }
+    }
+
+    @Test
+    func `Second Validation - Boundary Cases Including Leap Second`() throws {
+
+        for second in 0...60 {
+            _ = try Time.Second(second)
+        }
+
+        #expect(throws: Time.Second.Error.self) {
+            try Time.Second(-1)
+        }
+        #expect(throws: Time.Second.Error.self) {
+            try Time.Second(61)
+        }
+        #expect(throws: Time.Second.Error.self) {
+            try Time.Second(62)
+        }
+    }
+
+    @Test
+    func `Sub-Second Validation - All Precision Levels`() throws {
+
+        for value in 0...999 {
+            _ = try Time.Millisecond(value)
+            _ = try Time.Microsecond(value)
+            _ = try Time.Nanosecond(value)
+        }
+
+        #expect(throws: Time.Millisecond.Error.self) {
+            try Time.Millisecond(-1)
+        }
+        #expect(throws: Time.Millisecond.Error.self) {
+            try Time.Millisecond(1000)
+        }
+
+        #expect(throws: Time.Microsecond.Error.self) {
+            try Time.Microsecond(-1)
+        }
+        #expect(throws: Time.Microsecond.Error.self) {
+            try Time.Microsecond(1000)
+        }
+
+        #expect(throws: Time.Nanosecond.Error.self) {
+            try Time.Nanosecond(-1)
+        }
+        #expect(throws: Time.Nanosecond.Error.self) {
+            try Time.Nanosecond(1000)
+        }
+    }
+
+    @Test(
+        arguments: [
+            (0, 0, 0, 0),
+            (1, 0, 0, 1_000_000),
+            (0, 1, 0, 1_000),
+            (0, 0, 1, 1),
+            (1, 1, 1, 1_001_001),
+            (999, 999, 999, 999_999_999),
+            (123, 456, 789, 123_456_789),
+            (500, 500, 500, 500_500_500),
+        ]
+    )
+    func `Total Nanoseconds - Calculation accuracy`(ms: Int, us: Int, ns: Int, expected: Int) throws
+    {
+        let time = try GregorianDateTime(
+            year: 2024,
+            month: 1,
+            day: 1,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            millisecond: ms,
+            microsecond: us,
+            nanosecond: ns
+        )
+        #expect(time.totalNanoseconds == expected)
+    }
+
+    @Test
+    func `Total Nanoseconds - Boundary Cases`() throws {
+
+        let zero = try GregorianDateTime(
+            year: 2024,
+            month: 1,
+            day: 1,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            millisecond: 0,
+            microsecond: 0,
+            nanosecond: 0
+        )
+        #expect(zero.totalNanoseconds == 0)
+
+        let max = try GregorianDateTime(
+            year: 2024,
+            month: 1,
+            day: 1,
+            hour: 0,
+            minute: 0,
+            second: 0,
+            millisecond: 999,
+            microsecond: 999,
+            nanosecond: 999
+        )
+        #expect(max.totalNanoseconds == 999_999_999)
+    }
+
+    @Test
+    func `Time Construction - Invalid Date Combinations`() {
+
+        #expect(throws: GregorianDateTime.Error.self) {
+            try GregorianDateTime(year: 2024, month: 2, day: 30, hour: 0, minute: 0, second: 0)
+        }
+
+        #expect(throws: GregorianDateTime.Error.self) {
+            try GregorianDateTime(year: 2023, month: 2, day: 29, hour: 0, minute: 0, second: 0)
+        }
+
+        #expect(throws: GregorianDateTime.Error.self) {
+            try GregorianDateTime(year: 2024, month: 4, day: 31, hour: 0, minute: 0, second: 0)
+        }
+
+        #expect(throws: GregorianDateTime.Error.self) {
+            try GregorianDateTime(year: 2024, month: 6, day: 31, hour: 0, minute: 0, second: 0)
+        }
+
+        #expect(throws: GregorianDateTime.Error.self) {
+            try GregorianDateTime(year: 2024, month: 9, day: 31, hour: 0, minute: 0, second: 0)
+        }
+
+        #expect(throws: GregorianDateTime.Error.self) {
+            try GregorianDateTime(year: 2024, month: 11, day: 31, hour: 0, minute: 0, second: 0)
+        }
+    }
+
+    @Test
+    func `Time Construction - Valid Boundary Dates`() throws {
+
+        _ = try GregorianDateTime(year: 2024, month: 2, day: 29, hour: 0, minute: 0, second: 0)
+
+        for month in [1, 3, 5, 7, 8, 10, 12] {
+            _ = try GregorianDateTime(year: 2024, month: month, day: 31, hour: 0, minute: 0, second: 0)
+        }
+
+        for month in [4, 6, 9, 11] {
+            _ = try GregorianDateTime(year: 2024, month: month, day: 30, hour: 0, minute: 0, second: 0)
+        }
+
+        _ = try GregorianDateTime(year: 2024, month: 1, day: 1, hour: 23, minute: 59, second: 59)
+        _ = try GregorianDateTime(year: 2024, month: 1, day: 1, hour: 23, minute: 59, second: 60)
+    }
+}
