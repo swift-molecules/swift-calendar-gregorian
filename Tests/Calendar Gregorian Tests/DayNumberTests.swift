@@ -1,6 +1,10 @@
 import Testing
 import Calendar
 import Calendar_Gregorian
+import Difference
+import Cardinal
+import Magnitude
+import Tagged
 import Time
 
 @Suite struct DayNumberTests {
@@ -47,7 +51,7 @@ import Time
         let february = try Gregorian.Date(year: 2024, month: .february, day: 28)
         let march = try Gregorian.Date(year: 2024, month: .march, day: 1)
         #expect(try calendar.adding(days: 2, to: february) == march)
-        #expect(try calendar.distance(from: february, to: march) == 2)
+        #expect(try calendar.distance(from: february, to: march).underlying == Difference(2))
         let identity = Calendar<DayNumber>(dayNumber: { $0 }, date: { $0 })
         #expect(try identity.convert(calendar.convert(march, to: identity), to: calendar) == march)
     }
@@ -56,5 +60,20 @@ import Time
     func unixEndpointRoundTripsAfterCoordinateComposition(seconds: Int64) throws {
         let instant = try Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
         #expect(Instant(Gregorian.DateTime(instant)) == instant)
+    }
+
+    @Test func fullCoordinateDistanceRemainsARepresentableTypedDisplacement() throws {
+        let minimum = DayNumber(rawValue: .min)
+        let maximum = DayNumber(rawValue: .max)
+        let distance = minimum.distance(to: maximum)
+        #expect(distance.underlying.magnitude.value.rawValue == UInt.max)
+        #expect(try minimum.advanced(by: distance) == maximum)
+        #expect(try maximum.advanced(by: .init(_unchecked: -distance.underlying)) == minimum)
+
+        let calendar = Gregorian.calendar()
+        let first = try calendar.date(on: minimum)
+        let last = try calendar.date(on: maximum)
+        #expect(try calendar.distance(from: first, to: last) == distance)
+        #expect(try calendar.adding(days: distance, to: first) == last)
     }
 }

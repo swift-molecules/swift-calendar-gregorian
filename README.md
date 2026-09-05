@@ -1,7 +1,7 @@
 # swift-calendar-gregorian
 
 Proleptic Gregorian dates and conversion to the shared DayNumber coordinate.
-Dependencies remain Calendar -> Time, with Gregorian depending on both locally.
+Dependencies remain Calendar -> Time, with Gregorian depending on both. All manifests use URLs; the workspace resolves local checkouts.
 
 ```swift
 import Calendar
@@ -69,3 +69,27 @@ All six named epoch references (Unix, NTP, GPS, TAI, Windows FILETIME, Apple abs
 custom references remain. Named reference dates do not implement those time scales or
 wire formats. Typed errors retain evaluated month length and year without capturing a
 calendar-dependent reference value. Downstream RFC migration remains separate.
+
+
+## Exact fixed-offset interpretation
+
+```swift
+let zone = try Time.Zone.hours(-5, minutes: 30)
+let instant = try civil.instant(in: zone)
+let restored = try instant.gregorian(in: zone)
+assert(restored == civil)
+```
+
+These checked operations compose the same Gregorian day calculation with the
+shared Affine translation. UTC-to-local adds the offset; local-to-UTC applies the
+inverse translation. Nanoseconds are preserved and coordinate overflow is
+reported through `Gregorian.Conversion.Error`.
+
+A second component of 60 remains valid as a civil label. The exact uniform-day
+correspondence rejects that label because representing a leap second requires a
+separate time-scale interpretation. The older Unix convenience conversion retains
+its documented uniform-day normalization.
+
+Calendar distance now returns `DayNumber.Offset`, preserving the day domain and
+representing the entire Int64 minimum-to-maximum separation. `adding(days:to:)`
+accepts that typed offset; its integer overload remains a convenience boundary.
