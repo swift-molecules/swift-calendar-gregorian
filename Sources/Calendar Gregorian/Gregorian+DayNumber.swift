@@ -1,16 +1,15 @@
 public import Calendar
 
 extension Gregorian {
-    /// Gregorian date -> common fixed-day coordinate.
+
     public static func dayNumber(of date: Date) throws(Calendar::Calendar<Gregorian.Date>.Encode.Error) -> DayNumber {
         let day = fixedDay(year: date.year, month: date.month, day: date.day)
         guard let rawValue = Int64(exactly: day) else { throw .unsupported }
         return DayNumber(rawValue: rawValue)
     }
 
-    /// Common fixed-day coordinate -> validated Gregorian date.
     public static func date(on day: DayNumber) throws(Calendar::Calendar<Gregorian.Date>.Decode.Error) -> Date {
-        // Int128 keeps epoch shifts and cycle arithmetic safe at both Int64 endpoints.
+
         let shifted = Int128(day.rawValue) + 305
         let era = floorDivide(shifted, by: 146_097)
         let dayOfEra = shifted - era * 146_097
@@ -23,7 +22,7 @@ extension Gregorian {
         guard let dateYear = Int(exactly: year + (month <= 2 ? 1 : 0)) else {
             throw .unsupported(day)
         }
-        // Reuse the public joint validator even for arithmetic-derived components.
+
         let dateMonth = Month(unchecked: Int(month))
         do throws(Gregorian.Month.Day.Error) {
             return try Date(year: Year(dateYear), month: dateMonth, day: Int(dateDay))

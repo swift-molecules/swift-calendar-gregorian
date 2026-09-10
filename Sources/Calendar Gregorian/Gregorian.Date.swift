@@ -1,5 +1,5 @@
 extension Gregorian {
-    /// A year, month and day validated together under one calendar system.
+
     public struct Date {
         public let year: Gregorian.Year
         public let month: Gregorian.Month

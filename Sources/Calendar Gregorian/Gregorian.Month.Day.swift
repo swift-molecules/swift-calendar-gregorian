@@ -1,5 +1,5 @@
 extension Gregorian.Month {
-    /// A day-of-month component. A Date revalidates it against its own year and month.
+
     public struct Day {
         public let rawValue: Int
 

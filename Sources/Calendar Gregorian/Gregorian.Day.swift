@@ -3,7 +3,7 @@ public import Difference
 public import Tagged
 
 extension Gregorian {
-    /// A signed count of calendar-day steps, independent of elapsed seconds.
+
     public struct Day {
         public let offset: DayNumber.Offset
 

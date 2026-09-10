@@ -1,7 +1,6 @@
 public import Calendar
 public import Time
 
-/// Proleptic Gregorian dates and their interpretation on the fixed-day coordinate.
 public enum Gregorian {}
 
 extension Gregorian {

@@ -8,10 +8,7 @@ public import Calendar
 public import Time
 
 extension Gregorian.Conversion {
-    /// Interprets a local Gregorian label using a fixed translation from UTC.
-    ///
-    /// This correspondence uses uniform 86,400-second coordinate days. Leap-second
-    /// labels remain valid components, but have no inverse in this correspondence.
+
     public static func instant(
         from local: Gregorian.DateTime,
         in zone: Time.Zone = .utc
@@ -33,7 +30,6 @@ extension Gregorian.Conversion {
         }
     }
 
-    /// Renders a UTC instant as a local Gregorian label at a fixed numeric offset.
     public static func dateTime(
         from instant: Instant,
         in zone: Time.Zone = .utc
@@ -44,8 +40,7 @@ extension Gregorian.Conversion {
         } catch {
             throw .overflow
         }
-        // All supported targets have 64-bit Int storage. The checked conversion
-        // keeps the boundary explicit for callers on any narrower target.
+
         guard let seconds = Int(exactly: local.secondsSinceUnixEpoch) else { throw .overflow }
         return Gregorian.DateTime(
             _unchecked: (), secondsSinceEpoch: seconds,
@@ -53,8 +48,6 @@ extension Gregorian.Conversion {
         )
     }
 
-    // Every UInt-sized integral second offset fits Int128 attoseconds. Preserve
-    // the full signed Difference domain instead of narrowing it through Int64.
     private static func duration(of zone: Time.Zone) -> Swift.Duration {
         let offset = zone.offset.underlying
         let magnitude = Int128(offset.magnitude.value.rawValue)

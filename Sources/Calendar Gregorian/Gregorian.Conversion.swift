@@ -2,14 +2,13 @@ public import Calendar
 internal import Time
 
 extension Gregorian {
-    /// Existing Unix civil-time interpretation, composed from fixed-day and clock arithmetic.
+
     public enum Conversion {}
 }
 
 extension Gregorian.Conversion {
     static let unixEpochDay: Int128 = 719_163
 
-    /// Precondition: the Unix seconds coordinate fits in Int.
     public static func secondsSinceEpoch(from components: Gregorian.DateTime) -> Int {
         secondsSinceEpoch(
             year: components.year, month: components.month, day: components.day,
@@ -34,7 +33,7 @@ extension Gregorian.Conversion {
         fromSecondsSinceEpoch secondsSinceEpoch: Int
     ) -> (year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) {
         let clock = Time.Conversion.components(fromSeconds: secondsSinceEpoch)
-        // A quotient of an Int seconds coordinate by 86,400 plus the epoch fits Int64.
+
         let day = DayNumber(rawValue: Int64(clock.days) + Int64(unixEpochDay))
         do throws(Calendar::Calendar<Gregorian.Date>.Decode.Error) {
             let date = try Gregorian.date(on: day)
