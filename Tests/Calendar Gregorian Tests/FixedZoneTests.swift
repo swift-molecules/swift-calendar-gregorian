@@ -1,5 +1,6 @@
 import Calendar
-import Affine
+import Cardinal
+import Magnitude
 import Tagged
 import Calendar_Gregorian
 import Difference
@@ -104,5 +105,24 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
             let local = try Gregorian.DateTime(year: year, month: .january, day: 1)
             #expect(throws: Gregorian.Conversion.Error.overflow) { try local.instant() }
         }
+    }
+}
+
+
+extension FixedZoneTests {
+    @Test func offsetsLargerThanInt64RetainTheirFullDomain() throws {
+        let span = Difference.positive(Difference.Magnitude(Cardinal(UInt.max)))
+        let east = Time.Zone(offset: Time.Second.offset(span))
+        let west = Time.Zone(offset: Time.Second.offset(-span))
+        let first = try Instant(secondsSinceUnixEpoch: .min, nanosecondFraction: 123_456_789)
+        let last = try Instant(secondsSinceUnixEpoch: .max, nanosecondFraction: 123_456_789)
+        let localLast = try first.gregorian(in: east)
+        #expect(Instant(localLast) == last)
+        #expect(try localLast.instant(in: east) == first)
+        let localFirst = try last.gregorian(in: west)
+        #expect(Instant(localFirst) == first)
+        #expect(try localFirst.instant(in: west) == last)
+        #expect(throws: Gregorian.Conversion.Error.overflow) { try last.gregorian(in: east) }
+        #expect(throws: Gregorian.Conversion.Error.overflow) { try first.gregorian(in: west) }
     }
 }

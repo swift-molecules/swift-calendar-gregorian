@@ -33,7 +33,7 @@ weekday and Easter operations belong directly to Gregorian and its component typ
 Gregorian.Date owns and jointly validates Gregorian.Year, Gregorian.Month and
 Gregorian.Month.Day. Reusing a day component with a different month or year revalidates
 its context. Gregorian.DateTime aliases Calendar's generic DateTime<Gregorian.Date>;
-its component constructors, property conveniences and Instant/Codable integration
+its component constructors, property conveniences and Instant integration
 are extensions in this package. The date structure is not imposed on other calendars.
 
 ## Migration
@@ -50,7 +50,7 @@ are extensions in this package. The date structure is not imposed on other calen
 | Calendar.Gregorian leap-year/month-length/Easter operations | Same operations on Gregorian |
 | Civil Epoch and its six named reference definitions | Gregorian.Epoch = Time.Epoch<Gregorian.DateTime> |
 | Time.Epoch.Conversion | Gregorian.Conversion; also Gregorian.Epoch.Conversion |
-| Civil/Instant conversion and civil Codable | Gregorian integration; same Instant encoding |
+| Civil/Instant conversion and civil Codable | Gregorian conversion; explicitly encode Instant(civil) and decode Instant before constructing Gregorian.DateTime |
 | Bounded Time.Hour, Time.Minute, Time.Second | Time.Day.Hour, Time.Hour.Minute, Time.Minute.Second |
 | Fractional clock components | Time.Second.Millisecond through Time.Zeptosecond.Yoctosecond |
 | Time.Minute.quantity(90) | Time.Minute(90); analogous for every elapsed unit |
@@ -82,8 +82,8 @@ assert(restored == civil)
 ```
 
 These checked operations compose the same Gregorian day calculation with the
-shared Affine translation. UTC-to-local adds the offset; local-to-UTC applies the
-inverse translation. Nanoseconds are preserved and coordinate overflow is
+Time Instant checked duration arithmetic. UTC-to-local adds the offset;
+local-to-UTC subtracts it. Nanoseconds are preserved and coordinate overflow is
 reported through `Gregorian.Conversion.Error`.
 
 A second component of 60 remains valid as a civil label. The exact uniform-day
@@ -99,3 +99,11 @@ accepts that typed offset; its integer overload remains a convenience boundary.
 difference use checked Calendar coordinate operations. `Time.Day(1)` is a separate
 elapsed quantity of exactly 86,400 seconds. Date differences require `try` because
 a valid Gregorian date can lie outside the supported fixed-day coordinate range.
+
+Gregorian.DateTime does not conform to Codable: Unix seconds are an interpretation
+of a civil label, not Calendar.DateTime's generic representation. For the existing
+Unix wire format, encode `Instant(civil)` and decode `Instant` before constructing
+`Gregorian.DateTime(instant)`. This retains Instant's validation and wire keys
+without assigning Gregorian semantics to every Calendar.DateTime specialization.
+The nonthrowing conversion keeps its documented representability precondition;
+use the checked fixed-offset conversion when that boundary must be reported.

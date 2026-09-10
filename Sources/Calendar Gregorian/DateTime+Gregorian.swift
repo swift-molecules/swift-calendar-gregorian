@@ -253,20 +253,7 @@ extension Calendar::DateTime where Date == Gregorian.Date {
     }
 }
 
-#if !hasFeature(Embedded)
-    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-    extension Calendar::DateTime: @retroactive Codable where Date == Gregorian.Date {
 
-        public init(from decoder: any Decoder) throws {
-            let instant = try Instant(from: decoder)
-            self.init(instant)
-        }
-
-        public func encode(to encoder: any Encoder) throws {
-            try Instant(self).encode(to: encoder)
-        }
-    }
-#endif
 
 extension Calendar::DateTime where Date == Gregorian.Date {
     public var year: Gregorian.Year { date.year }

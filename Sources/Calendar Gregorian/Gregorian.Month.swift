@@ -4,13 +4,6 @@ extension Gregorian {
 
         public let rawValue: Int
 
-        public init?(rawValue: Int) {
-            guard (1...12).contains(rawValue) else {
-                return nil
-            }
-            self.rawValue = rawValue
-        }
-
         public init(_ value: Int) throws(Gregorian.Month.Error) {
             guard (1...12).contains(value) else {
                 throw Error.invalidMonth(value)
@@ -88,3 +81,10 @@ extension Gregorian.Month: Sendable {}
 extension Gregorian.Month: Equatable {}
 extension Gregorian.Month: Hashable {}
 extension Gregorian.Month: Comparable {}
+
+extension Gregorian.Month {
+    public init?(rawValue: Int) {
+        do { try self.init(rawValue) }
+        catch { return nil }
+    }
+}

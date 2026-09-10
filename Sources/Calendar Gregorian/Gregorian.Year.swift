@@ -7,10 +7,6 @@ extension Gregorian {
         public init(rawValue: Int) {
             self.rawValue = rawValue
         }
-
-        public init(_ value: Int) {
-            self.rawValue = value
-        }
     }
 }
 
@@ -33,3 +29,7 @@ extension Gregorian.Year: Sendable {}
 extension Gregorian.Year: Equatable {}
 extension Gregorian.Year: Hashable {}
 extension Gregorian.Year: Comparable {}
+
+extension Gregorian.Year {
+    public init(_ value: Int) { self.init(rawValue: value) }
+}

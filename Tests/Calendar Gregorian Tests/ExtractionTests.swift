@@ -48,8 +48,8 @@ import Calendar_Gregorian
         #expect(civil.nanosecond.value == 789)
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
-        #expect(try encoder.encode(civil) == encoder.encode(instant))
-        #expect(try JSONDecoder().decode(GregorianDateTime.self, from: encoder.encode(civil)) == civil)
+        #expect(try encoder.encode(Instant(civil)) == encoder.encode(instant))
+        #expect(try GregorianDateTime(JSONDecoder().decode(Instant.self, from: encoder.encode(Instant(civil)))) == civil)
     }
 
     @Test func weekdayUsesTheGregorianDayCoordinateAcrossNegativeYears() throws {
@@ -59,5 +59,20 @@ import Calendar_Gregorian
         let index = try #require(week.firstIndex(of: last.weekday))
         #expect(next.weekday == week[(index + 1) % 7])
         #expect(GregorianDateTime(secondsSinceEpoch: last.secondsSinceEpoch + 7 * Time.Conversion.secondsPerDay).weekday == last.weekday)
+    }
+}
+
+
+extension ExtractionTests {
+    @Test func rawMonthConstructionUsesTheJointValidationBoundary() throws {
+        for value in -1...14 {
+            let month = Gregorian.Month(rawValue: value)
+            if (1...12).contains(value) {
+                #expect(month == (try Gregorian.Month(value)))
+            } else {
+                #expect(month == nil)
+                #expect(throws: Gregorian.Month.Error.invalidMonth(value)) { try Gregorian.Month(value) }
+            }
+        }
     }
 }

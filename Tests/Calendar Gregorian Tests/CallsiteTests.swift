@@ -2,7 +2,6 @@ import Testing
 import Time
 import Calendar_Gregorian
 import Calendar
-import Affine
 import Rational
 
 @Suite struct Callsites {
@@ -35,8 +34,10 @@ import Rational
     }
 
     @Test func `quantity arithmetic still checks precision and overflow`() throws {
-        let maximum = Time.Second(try Rational(numerator: .max))
-        #expect(throws: Rational.Error.overflow) { try maximum + Time.Second(1) }
+        let maximum = Time.Second(Int128.max)
+        let beyond = try maximum + Time.Second(1)
+        #expect(try beyond - Time.Second(1) == maximum)
+        #expect(throws: Rational.Error.self) { try beyond.value.integer(as: Int128.self) }
         let origin = Instant(secondsSinceUnixEpoch: 0)
         #expect(throws: Instant.Error.precision) { try origin + Time.Picosecond(1) }
     }

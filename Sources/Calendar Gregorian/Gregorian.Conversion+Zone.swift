@@ -1,4 +1,9 @@
-public import Affine
+internal import Cardinal
+internal import Difference
+internal import Magnitude
+internal import Polarity
+internal import Tagged
+internal import Translation
 public import Calendar
 public import Time
 
@@ -17,16 +22,15 @@ extension Gregorian.Conversion {
         let seconds = days * Int128(Time.Conversion.secondsPerDay)
             + Int128(Time.Conversion.seconds(hour: local.hour, minute: local.minute, second: local.second))
         guard let seconds = Int64(exactly: seconds) else { throw .overflow }
-        let utc: Affine.Position<Time.Second>
+        let coordinate = Instant(
+            _unchecked: (), secondsSinceUnixEpoch: seconds,
+            nanosecondFraction: Int32(local.totalNanoseconds)
+        )
         do {
-            utc = try zone.inverted().applying(to: Affine.Position(rawValue: seconds))
+            return try coordinate.advanced(exactly: Swift.Duration(attoseconds: -duration(of: zone).attoseconds))
         } catch {
             throw .overflow
         }
-        return Instant(
-            _unchecked: (), secondsSinceUnixEpoch: utc.rawValue,
-            nanosecondFraction: Int32(local.totalNanoseconds)
-        )
     }
 
     /// Renders a UTC instant as a local Gregorian label at a fixed numeric offset.
@@ -34,20 +38,30 @@ extension Gregorian.Conversion {
         from instant: Instant,
         in zone: Time.Zone = .utc
     ) throws(Error) -> Gregorian.DateTime {
-        let local: Affine.Position<Time.Second>
+        let local: Instant
         do {
-            local = try zone.applying(to: instant.position)
+            local = try instant.advanced(exactly: duration(of: zone))
         } catch {
             throw .overflow
         }
         // All supported targets have 64-bit Int storage. The checked conversion
         // keeps the boundary explicit for callers on any narrower target.
-        guard let seconds = Int(exactly: local.rawValue) else { throw .overflow }
+        guard let seconds = Int(exactly: local.secondsSinceUnixEpoch) else { throw .overflow }
         return Gregorian.DateTime(
             _unchecked: (), secondsSinceEpoch: seconds,
             nanoseconds: Int(instant.nanosecondFraction)
         )
     }
+
+    // Every UInt-sized integral second offset fits Int128 attoseconds. Preserve
+    // the full signed Difference domain instead of narrowing it through Int64.
+    private static func duration(of zone: Time.Zone) -> Swift.Duration {
+        let offset = zone.offset.underlying
+        let magnitude = Int128(offset.magnitude.value.rawValue)
+        let seconds = offset.polarity == .negative ? -magnitude : magnitude
+        return Swift.Duration(attoseconds: seconds * 1_000_000_000_000_000_000)
+    }
+
 }
 
 extension Calendar::DateTime where Date == Gregorian.Date {

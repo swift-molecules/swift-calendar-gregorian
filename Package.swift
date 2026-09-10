@@ -9,8 +9,9 @@ let package = Package(
         .library(name: "Calendar Gregorian", targets: ["Calendar Gregorian"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/swift-atoms/swift-polarity.git", branch: "main"),
+        .package(url: "https://github.com/swift-atoms/swift-translation.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-rational.git", branch: "main"),
-        .package(url: "https://github.com/swift-atoms/swift-affine.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-calendar.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-difference.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-magnitude.git", branch: "main"),
@@ -20,16 +21,18 @@ let package = Package(
     ],
     targets: [
         .target(name: "Calendar Gregorian", dependencies: [
+            .product(name: "Cardinal", package: "swift-cardinal"),
+            .product(name: "Magnitude", package: "swift-magnitude"),
+            .product(name: "Polarity", package: "swift-polarity"),
+            .product(name: "Translation", package: "swift-translation"),
             .product(name: "Difference", package: "swift-difference"),
             .product(name: "Tagged", package: "swift-tagged"),
-            .product(name: "Affine", package: "swift-affine"),
             .product(name: "Calendar", package: "swift-calendar"),
             .product(name: "Time", package: "swift-time"),
         ]),
         .testTarget(name: "Calendar Gregorian Tests", dependencies: [
             .product(name: "Rational", package: "swift-rational"),
             .target(name: "Calendar Gregorian"),
-            .product(name: "Affine", package: "swift-affine"),
             .product(name: "Cardinal", package: "swift-cardinal"),
             .product(name: "Magnitude", package: "swift-magnitude"),
             .product(name: "Tagged", package: "swift-tagged"),
