@@ -43,7 +43,7 @@ let package = Package(
             .product(name: "Difference", package: "swift-difference"),
             .product(name: "Time", package: "swift-time"),
         ]),
-        .testTarget(name: "Gregorian Julian Tests", dependencies: [.target(name: "Calendar Gregorian"), .product(name: "Time", package: "swift-time"), .product(name: "Tagged", package: "swift-tagged")], path: "Tests/Gregorian Julian Tests"),
+        .testTarget(name: "Gregorian Julian Tests", dependencies: [.target(name: "Calendar Gregorian"), .product(name: "Calendar", package: "swift-calendar"), .product(name: "Time", package: "swift-time"), .product(name: "Tagged", package: "swift-tagged")], path: "Tests/Gregorian Julian Tests"),
     ],
     swiftLanguageModes: [.v6]
 )
