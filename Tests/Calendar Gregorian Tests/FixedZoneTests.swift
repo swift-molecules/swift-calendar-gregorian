@@ -13,7 +13,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
 
 @Suite struct FixedZoneTests {
     @Test func fixedOffsetsHaveTheExpectedDirectionAcrossMidnightAndYearBoundaries() throws {
-        let epoch = Instant(secondsSinceUnixEpoch: 0)
+        let epoch = Time.Instant(secondsSinceUnixEpoch: 0)
         let west = try epoch.gregorian(in: fixedZone(-30))
         #expect(west.year.rawValue == 1969)
         #expect(west.month == .december)
@@ -47,7 +47,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
             let zone = fixedZone(offset)
             for value in seconds {
                 for fraction in [Int32(0), 1, 123_456_789, 999_999_999] {
-                    let instant = try Instant(secondsSinceUnixEpoch: value, nanosecondFraction: fraction)
+                    let instant = try Time.Instant(secondsSinceUnixEpoch: value, nanosecondFraction: fraction)
                     let local = try instant.gregorian(in: zone)
                     #expect(try local.instant(in: zone) == instant)
                     #expect(try Gregorian.DateTime(instant: instant, in: zone) == local)
@@ -73,15 +73,15 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
     @Test func fullUnixCoordinateEndpointsRoundTripExactlyInUTC() throws {
         for seconds in [Int64.min, .min + 1, .max - 1, .max] {
             for fraction in [Int32(0), 1, 999_999_999] {
-                let instant = try Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: fraction)
+                let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: fraction)
                 #expect(try instant.gregorian().instant() == instant)
             }
         }
     }
 
     @Test func overflowingFixedTranslationsReportErrorsInEitherDirection() throws {
-        let maximum = Instant(secondsSinceUnixEpoch: .max)
-        let minimum = Instant(secondsSinceUnixEpoch: .min)
+        let maximum = Time.Instant(secondsSinceUnixEpoch: .max)
+        let minimum = Time.Instant(secondsSinceUnixEpoch: .min)
         #expect(throws: Gregorian.Conversion.Error.overflow) {
             try maximum.gregorian(in: fixedZone(1))
         }
@@ -114,13 +114,13 @@ extension FixedZoneTests {
         let span = Difference.positive(Difference.Magnitude(Cardinal(UInt.max)))
         let east = Time.Zone(offset: Time.Second.offset(span))
         let west = Time.Zone(offset: Time.Second.offset(-span))
-        let first = try Instant(secondsSinceUnixEpoch: .min, nanosecondFraction: 123_456_789)
-        let last = try Instant(secondsSinceUnixEpoch: .max, nanosecondFraction: 123_456_789)
+        let first = try Time.Instant(secondsSinceUnixEpoch: .min, nanosecondFraction: 123_456_789)
+        let last = try Time.Instant(secondsSinceUnixEpoch: .max, nanosecondFraction: 123_456_789)
         let localLast = try first.gregorian(in: east)
-        #expect(Instant(localLast) == last)
+        #expect(Time.Instant(localLast) == last)
         #expect(try localLast.instant(in: east) == first)
         let localFirst = try last.gregorian(in: west)
-        #expect(Instant(localFirst) == first)
+        #expect(Time.Instant(localFirst) == first)
         #expect(try localFirst.instant(in: west) == last)
         #expect(throws: Gregorian.Conversion.Error.overflow) { try last.gregorian(in: east) }
         #expect(throws: Gregorian.Conversion.Error.overflow) { try first.gregorian(in: west) }

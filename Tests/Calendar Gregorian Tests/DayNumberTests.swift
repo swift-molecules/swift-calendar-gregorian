@@ -58,8 +58,8 @@ import Time
 
     @Test(arguments: [Int64.min, Int64.max])
     func unixEndpointRoundTripsAfterCoordinateComposition(seconds: Int64) throws {
-        let instant = try Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
-        #expect(Instant(Gregorian.DateTime(instant)) == instant)
+        let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
+        #expect(Time.Instant(Gregorian.DateTime(instant)) == instant)
     }
 
     @Test func fullCoordinateDistanceRemainsARepresentableTypedDisplacement() throws {

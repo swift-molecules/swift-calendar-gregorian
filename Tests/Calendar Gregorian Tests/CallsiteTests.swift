@@ -38,7 +38,7 @@ import Rational
         let beyond = try maximum + Time.Second(1)
         #expect(try beyond - Time.Second(1) == maximum)
         #expect(throws: Rational.Error.self) { try beyond.value.integer(as: Int128.self) }
-        let origin = Instant(secondsSinceUnixEpoch: 0)
-        #expect(throws: Instant.Error.precision) { try origin + Time.Picosecond(1) }
+        let origin = Time.Instant(secondsSinceUnixEpoch: 0)
+        #expect(throws: Time.Instant.Error.precision) { try origin + Time.Picosecond(1) }
     }
 }

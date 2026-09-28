@@ -1,7 +1,7 @@
 public import Calendar
 public import Time
 
-extension Instant {
+extension Time.Instant {
     public init(_ time: Gregorian.DateTime) {
         self.init(
             _unchecked: (),

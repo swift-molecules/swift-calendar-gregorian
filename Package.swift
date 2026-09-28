@@ -8,6 +8,9 @@ let package = Package(
     products: [
         .library(name: "Calendar Gregorian", targets: ["Calendar Gregorian"]),
     ],
+    traits: [
+        .trait(name: "Julian", description: "Julian integration"),
+    ],
     dependencies: [
         .package(url: "https://github.com/swift-atoms/swift-polarity.git", branch: "main"),
         .package(url: "https://github.com/swift-atoms/swift-translation.git", branch: "main"),
@@ -29,7 +32,7 @@ let package = Package(
             .product(name: "Tagged", package: "swift-tagged"),
             .product(name: "Calendar", package: "swift-calendar"),
             .product(name: "Time", package: "swift-time"),
-        ]),
+            ]),
         .testTarget(name: "Calendar Gregorian Tests", dependencies: [
             .product(name: "Rational", package: "swift-rational"),
             .target(name: "Calendar Gregorian"),
@@ -40,6 +43,7 @@ let package = Package(
             .product(name: "Difference", package: "swift-difference"),
             .product(name: "Time", package: "swift-time"),
         ]),
+        .testTarget(name: "Gregorian Julian Tests", dependencies: [.target(name: "Calendar Gregorian"), .product(name: "Time", package: "swift-time"), .product(name: "Tagged", package: "swift-tagged")], path: "Tests/Gregorian Julian Tests"),
     ],
     swiftLanguageModes: [.v6]
 )

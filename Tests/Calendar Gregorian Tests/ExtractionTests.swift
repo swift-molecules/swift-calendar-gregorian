@@ -40,16 +40,16 @@ import Calendar_Gregorian
 
     @Test(arguments: [Int64(-1), 0, 1, 1_704_067_200])
     func fractionalInstantAndEncodingRoundTrip(seconds: Int64) throws {
-        let instant = try Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
+        let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
         let civil = GregorianDateTime(instant)
-        #expect(Instant(civil) == instant)
+        #expect(Time.Instant(civil) == instant)
         #expect(civil.millisecond.value == 123)
         #expect(civil.microsecond.value == 456)
         #expect(civil.nanosecond.value == 789)
         let encoder = JSONEncoder()
         encoder.outputFormatting = .sortedKeys
-        #expect(try encoder.encode(Instant(civil)) == encoder.encode(instant))
-        #expect(try GregorianDateTime(JSONDecoder().decode(Instant.self, from: encoder.encode(Instant(civil)))) == civil)
+        #expect(try encoder.encode(Time.Instant(civil)) == encoder.encode(instant))
+        #expect(try GregorianDateTime(JSONDecoder().decode(Time.Instant.self, from: encoder.encode(Time.Instant(civil)))) == civil)
     }
 
     @Test func weekdayUsesTheGregorianDayCoordinateAcrossNegativeYears() throws {

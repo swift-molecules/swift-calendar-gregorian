@@ -12,14 +12,14 @@ extension Gregorian.Conversion {
     public static func instant(
         from local: Gregorian.DateTime,
         in zone: Time.Zone = .utc
-    ) throws(Error) -> Instant {
+    ) throws(Error) -> Time.Instant {
         guard local.second.value < 60 else { throw .unsupportedLeapSecond }
         let days = Gregorian.fixedDay(year: local.year, month: local.month, day: local.day)
             - unixEpochDay
         let seconds = days * Int128(Time.Conversion.secondsPerDay)
             + Int128(Time.Conversion.seconds(hour: local.hour, minute: local.minute, second: local.second))
         guard let seconds = Int64(exactly: seconds) else { throw .overflow }
-        let coordinate = Instant(
+        let coordinate = Time.Instant(
             _unchecked: (), secondsSinceUnixEpoch: seconds,
             nanosecondFraction: Int32(local.totalNanoseconds)
         )
@@ -31,10 +31,10 @@ extension Gregorian.Conversion {
     }
 
     public static func dateTime(
-        from instant: Instant,
+        from instant: Time.Instant,
         in zone: Time.Zone = .utc
     ) throws(Error) -> Gregorian.DateTime {
-        let local: Instant
+        let local: Time.Instant
         do {
             local = try instant.advanced(exactly: duration(of: zone))
         } catch {
@@ -58,18 +58,18 @@ extension Gregorian.Conversion {
 }
 
 extension Calendar::DateTime where Date == Gregorian.Date {
-    public func instant(in zone: Time.Zone = .utc) throws(Gregorian.Conversion.Error) -> Instant {
+    public func instant(in zone: Time.Zone = .utc) throws(Gregorian.Conversion.Error) -> Time.Instant {
         try Gregorian.Conversion.instant(from: self, in: zone)
     }
 
     public init(
-        instant: Instant, in zone: Time.Zone = .utc
+        instant: Time.Instant, in zone: Time.Zone = .utc
     ) throws(Gregorian.Conversion.Error) {
         self = try Gregorian.Conversion.dateTime(from: instant, in: zone)
     }
 }
 
-extension Instant {
+extension Time.Instant {
     public func gregorian(
         in zone: Time.Zone = .utc
     ) throws(Gregorian.Conversion.Error) -> Gregorian.DateTime {
