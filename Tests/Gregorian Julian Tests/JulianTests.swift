@@ -148,7 +148,7 @@ extension Gregorian.Julian {
         @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
         @Test
         func `instant To Julian Day`() throws {
-            let instant = try Time.Instant(secondsSinceUnixEpoch: 0)
+            let instant = Time.Instant(secondsSinceUnixEpoch: 0)
             let jd = Gregorian.Julian.Day(instant)
             #expect(abs(jd.underlying - 2_440_587.5) < 0.0001)
         }
@@ -168,7 +168,7 @@ extension Gregorian.Julian {
                 secondsSinceUnixEpoch: 1_000_000_000,
                 nanosecondFraction: 500_000_000
             )
-            let jd = try Gregorian.Julian.Day(original)
+            let jd = Gregorian.Julian.Day(original)
             let restored = try Time.Instant(jd)
 
             #expect(restored.secondsSinceUnixEpoch == original.secondsSinceUnixEpoch)

@@ -5,5 +5,5 @@ extension Gregorian.Month.Day {
     }
 }
 
-extension Gregorian.Month.Day.Error: Swift.Error {}
+extension Gregorian.Month.Day.Error: Swift::Error {}
 extension Gregorian.Month.Day.Error: Equatable {}

@@ -8,5 +8,5 @@ extension Gregorian.Week.Day {
     }
 }
 
-extension Gregorian.Week.Day.Error: Swift.Error {}
+extension Gregorian.Week.Day.Error: Swift::Error {}
 extension Gregorian.Week.Day.Error: Equatable {}

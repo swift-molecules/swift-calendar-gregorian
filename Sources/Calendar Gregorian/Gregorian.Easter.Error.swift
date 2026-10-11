@@ -6,5 +6,5 @@ extension Gregorian.Easter {
     }
 }
 
-extension Gregorian.Easter.Error: Swift.Error {}
+extension Gregorian.Easter.Error: Swift::Error {}
 extension Gregorian.Easter.Error: Equatable {}

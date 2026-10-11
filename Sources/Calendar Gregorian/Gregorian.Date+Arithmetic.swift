@@ -27,7 +27,7 @@ extension Gregorian.Date {
         return Self(
             unchecked: target,
             month: targetMonth,
-            day: Gregorian.Month.Day(unchecked: Swift.min(day.rawValue, targetMonth.days(in: target)))
+            day: Gregorian.Month.Day(unchecked: Swift::min(day.rawValue, targetMonth.days(in: target)))
         )
     }
 

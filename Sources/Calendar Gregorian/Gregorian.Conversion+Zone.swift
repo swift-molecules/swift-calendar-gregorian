@@ -24,7 +24,7 @@ extension Gregorian.Conversion {
             nanosecondFraction: Int32(local.totalNanoseconds)
         )
         do {
-            return try coordinate.advanced(exactly: Swift.Duration(attoseconds: -duration(of: zone).attoseconds))
+            return try coordinate.advanced(exactly: Swift::Duration(attoseconds: -duration(of: zone).attoseconds))
         } catch {
             throw .overflow
         }
@@ -48,11 +48,11 @@ extension Gregorian.Conversion {
         )
     }
 
-    private static func duration(of zone: Time.Zone) -> Swift.Duration {
+    private static func duration(of zone: Time.Zone) -> Swift::Duration {
         let offset = zone.offset.underlying
         let magnitude = Int128(offset.magnitude.value.rawValue)
         let seconds = offset.polarity == .negative ? -magnitude : magnitude
-        return Swift.Duration(attoseconds: seconds * 1_000_000_000_000_000_000)
+        return Swift::Duration(attoseconds: seconds * 1_000_000_000_000_000_000)
     }
 
 }

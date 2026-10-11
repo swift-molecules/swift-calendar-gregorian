@@ -22,5 +22,5 @@ extension Calendar::DateTime where Date == Gregorian.Date {
     }
 }
 
-extension Calendar::DateTime.Error: Swift.Error {}
+extension Calendar::DateTime.Error: Swift::Error {}
 extension Calendar::DateTime.Error: Equatable {}

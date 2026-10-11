@@ -12,7 +12,7 @@ extension Gregorian {
         public enum OffsetDomain {}
         public typealias Day = Tagged<DayDomain, Double>
         public typealias Offset = Tagged<OffsetDomain, Double>
-        public enum Error: Swift.Error, Equatable, Sendable {
+        public enum Error: Swift::Error, Equatable, Sendable {
             case nonfinite
             case unrepresentable
             case invalidCalendar

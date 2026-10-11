@@ -86,7 +86,7 @@ extension Time.Instant.Tests.`Edge Case` {
     @Test
     func `pre-1970 Time.Instant round trips through Julian Day`() throws {
         let original = try Time.Instant(secondsSinceUnixEpoch: -100_000, nanosecondFraction: 250_000_000)
-        let julianDay = try Gregorian.Julian.Day(original)
+        let julianDay = Gregorian.Julian.Day(original)
         let restored = try Time.Instant(julianDay)
 
         #expect(restored.secondsSinceUnixEpoch == original.secondsSinceUnixEpoch)
