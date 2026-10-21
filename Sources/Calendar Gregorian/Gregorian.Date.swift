@@ -6,7 +6,9 @@ extension Gregorian {
         public let day: Gregorian.Month.Day
 
         public init(
-            year: Gregorian.Year, month: Gregorian.Month, day: Int
+            year: Gregorian.Year,
+            month: Gregorian.Month,
+            day: Int
         ) throws(Gregorian.Month.Day.Error) {
             self.year = year
             self.month = month
@@ -35,7 +37,9 @@ extension Gregorian.Date: Comparable {}
 
 extension Gregorian.Date {
     public init(
-        year: Gregorian.Year, month: Gregorian.Month, day: Gregorian.Month.Day
+        year: Gregorian.Year,
+        month: Gregorian.Month,
+        day: Gregorian.Month.Day
     ) throws(Gregorian.Month.Day.Error) {
         try self.init(year: year, month: month, day: day.rawValue)
     }

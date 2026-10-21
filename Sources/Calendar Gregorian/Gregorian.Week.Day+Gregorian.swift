@@ -1,5 +1,3 @@
-
-
 extension Gregorian.Weekday {
 
     public init(

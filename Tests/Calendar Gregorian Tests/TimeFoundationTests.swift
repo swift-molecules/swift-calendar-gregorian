@@ -1,9 +1,9 @@
 import Foundation
 import Testing
 
-@_spi(Internal) @testable import Time
 @_spi(Internal) @testable import Calendar
 @_spi(Internal) @testable import Calendar_Gregorian
+@_spi(Internal) @testable import Time
 
 @Suite
 struct `Time vs Foundation Comparison Tests` {

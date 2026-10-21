@@ -52,8 +52,15 @@ extension Calendar::DateTime where Date == Gregorian.Date {
             throw Error.monthOutOfRange(month)
         }
         try self.init(
-            year: year, month: m, day: day, hour: hour, minute: minute, second: second,
-            millisecond: millisecond, microsecond: microsecond, nanosecond: nanosecond
+            year: year,
+            month: m,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second,
+            millisecond: millisecond,
+            microsecond: microsecond,
+            nanosecond: nanosecond
         )
     }
 
@@ -214,7 +221,9 @@ extension Calendar::DateTime where Date == Gregorian.Date {
 extension Calendar::DateTime where Date == Gregorian.Date {
 
     public static func totalNanoseconds(
-        millisecond: Time.Second.Millisecond, microsecond: Time.Millisecond.Microsecond, nanosecond: Time.Microsecond.Nanosecond
+        millisecond: Time.Second.Millisecond,
+        microsecond: Time.Millisecond.Microsecond,
+        nanosecond: Time.Microsecond.Nanosecond
     ) -> Int {
         Time.totalNanoseconds(millisecond: millisecond, microsecond: microsecond, nanosecond: nanosecond)
     }
@@ -253,8 +262,6 @@ extension Calendar::DateTime where Date == Gregorian.Date {
     }
 }
 
-
-
 extension Calendar::DateTime where Date == Gregorian.Date {
     public var year: Gregorian.Year { date.year }
     public var month: Gregorian.Month { date.month }
@@ -273,8 +280,12 @@ extension Calendar::DateTime where Date == Gregorian.Date {
     ) throws(Gregorian.Month.Day.Error) {
         self.init(
             date: try Gregorian.Date(year: year, month: month, day: day),
-            hour: hour, minute: minute, second: second,
-            millisecond: millisecond, microsecond: microsecond, nanosecond: nanosecond
+            hour: hour,
+            minute: minute,
+            second: second,
+            millisecond: millisecond,
+            microsecond: microsecond,
+            nanosecond: nanosecond
         )
     }
 }
@@ -290,9 +301,15 @@ extension Calendar::DateTime where Date == Gregorian.Date {
         nanosecond: Int = 0
     ) throws(Gregorian.DateTime.Error) {
         try self.init(
-            year: date.year.rawValue, month: date.month, day: date.day.rawValue,
-            hour: hour, minute: minute, second: second,
-            millisecond: millisecond, microsecond: microsecond, nanosecond: nanosecond
+            year: date.year.rawValue,
+            month: date.month,
+            day: date.day.rawValue,
+            hour: hour,
+            minute: minute,
+            second: second,
+            millisecond: millisecond,
+            microsecond: microsecond,
+            nanosecond: nanosecond
         )
     }
 }

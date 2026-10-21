@@ -84,7 +84,6 @@ extension Gregorian.Month: Comparable {}
 
 extension Gregorian.Month {
     public init?(rawValue: Int) {
-        do { try self.init(rawValue) }
-        catch { return nil }
+        do { try self.init(rawValue) } catch { return nil }
     }
 }

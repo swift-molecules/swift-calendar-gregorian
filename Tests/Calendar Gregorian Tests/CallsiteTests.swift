@@ -1,8 +1,8 @@
+import Calendar
+import Calendar_Gregorian
+import Rational
 import Testing
 import Time
-import Calendar_Gregorian
-import Calendar
-import Rational
 
 @Suite struct Callsites {
     @Test func `quantities and clock components have distinct construction`() throws {

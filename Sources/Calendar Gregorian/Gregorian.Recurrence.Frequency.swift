@@ -13,5 +13,5 @@ extension Gregorian.Recurrence.Frequency: Equatable {}
 extension Gregorian.Recurrence.Frequency: Hashable {}
 
 #if !hasFeature(Embedded)
-extension Gregorian.Recurrence.Frequency: Codable {}
+    extension Gregorian.Recurrence.Frequency: Codable {}
 #endif

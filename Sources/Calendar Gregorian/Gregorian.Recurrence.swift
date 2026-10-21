@@ -16,5 +16,5 @@ extension Gregorian.Recurrence: Equatable {}
 extension Gregorian.Recurrence: Hashable {}
 
 #if !hasFeature(Embedded)
-extension Gregorian.Recurrence: Codable {}
+    extension Gregorian.Recurrence: Codable {}
 #endif

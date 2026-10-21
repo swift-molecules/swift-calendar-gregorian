@@ -1,10 +1,10 @@
-import Testing
 import Calendar
 import Calendar_Gregorian
-import Difference
 import Cardinal
+import Difference
 import Magnitude
 import Tagged
+import Testing
 import Time
 
 @Suite struct DayNumberTests {
@@ -13,7 +13,7 @@ import Time
         let anchors: [(Int, Gregorian.Month, Int, Int64)] = [
             (0, .january, 1, -365), (0, .december, 31, 0), (1, .january, 1, 1),
             (1969, .december, 31, 719_162), (1970, .january, 1, 719_163),
-            (2000, .january, 1, 730_120)
+            (2000, .january, 1, 730_120),
         ]
         for (year, month, day, ordinal) in anchors {
             let date = try Gregorian.Date(year: .init(year), month: month, day: day)

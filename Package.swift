@@ -6,10 +6,10 @@ let package = Package(
     name: "swift-calendar-gregorian",
     platforms: [.macOS(.v27), .iOS(.v27), .tvOS(.v27), .watchOS(.v27), .visionOS(.v27)],
     products: [
-        .library(name: "Calendar Gregorian", targets: ["Calendar Gregorian"]),
+        .library(name: "Calendar Gregorian", targets: ["Calendar Gregorian"])
     ],
     traits: [
-        .trait(name: "Julian", description: "Julian integration"),
+        .trait(name: "Julian", description: "Julian integration")
     ],
     dependencies: [
         .package(url: "https://github.com/swift-atoms/swift-polarity.git", branch: "main"),
@@ -23,40 +23,54 @@ let package = Package(
         .package(url: "https://github.com/swift-atoms/swift-time.git", branch: "main"),
     ],
     targets: [
-        .target(name: "Calendar Gregorian", dependencies: [
-            .product(name: "Cardinal", package: "swift-cardinal"),
-            .product(name: "Magnitude", package: "swift-magnitude"),
-            .product(name: "Polarity", package: "swift-polarity"),
-            .product(name: "Translation", package: "swift-translation"),
-            .product(name: "Difference", package: "swift-difference"),
-            .product(name: "Tagged", package: "swift-tagged"),
-            .product(name: "Calendar", package: "swift-calendar"),
-            .product(name: "Time", package: "swift-time"),
-            ]),
-        .testTarget(name: "Calendar Gregorian Tests", dependencies: [
-            .product(name: "Rational", package: "swift-rational"),
-            .target(name: "Calendar Gregorian"),
-            .product(name: "Cardinal", package: "swift-cardinal"),
-            .product(name: "Magnitude", package: "swift-magnitude"),
-            .product(name: "Tagged", package: "swift-tagged"),
-            .product(name: "Calendar", package: "swift-calendar"),
-            .product(name: "Difference", package: "swift-difference"),
-            .product(name: "Time", package: "swift-time"),
-        ]),
-        .testTarget(name: "Gregorian Julian Tests", dependencies: [.target(name: "Calendar Gregorian"), .product(name: "Calendar", package: "swift-calendar"), .product(name: "Time", package: "swift-time"), .product(name: "Tagged", package: "swift-tagged")], path: "Tests/Gregorian Julian Tests"),
+        .target(
+            name: "Calendar Gregorian",
+            dependencies: [
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Magnitude", package: "swift-magnitude"),
+                .product(name: "Polarity", package: "swift-polarity"),
+                .product(name: "Translation", package: "swift-translation"),
+                .product(name: "Difference", package: "swift-difference"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Calendar", package: "swift-calendar"),
+                .product(name: "Time", package: "swift-time"),
+            ]
+        ),
+        .testTarget(
+            name: "Calendar Gregorian Tests",
+            dependencies: [
+                .product(name: "Rational", package: "swift-rational"),
+                .target(name: "Calendar Gregorian"),
+                .product(name: "Cardinal", package: "swift-cardinal"),
+                .product(name: "Magnitude", package: "swift-magnitude"),
+                .product(name: "Tagged", package: "swift-tagged"),
+                .product(name: "Calendar", package: "swift-calendar"),
+                .product(name: "Difference", package: "swift-difference"),
+                .product(name: "Time", package: "swift-time"),
+            ]
+        ),
+        .testTarget(
+            name: "Gregorian Julian Tests",
+            dependencies: [
+                .target(name: "Calendar Gregorian"), .product(name: "Calendar", package: "swift-calendar"), .product(name: "Time", package: "swift-time"),
+                .product(name: "Tagged", package: "swift-tagged"),
+            ],
+            path: "Tests/Gregorian Julian Tests"
+        ),
     ],
     swiftLanguageModes: [.v6]
 )
 
 for target in package.targets where ![.system, .binary, .plugin, .macro].contains(target.type) {
-    target.swiftSettings = (target.swiftSettings ?? []) + [
-        .strictMemorySafety(),
-        .enableUpcomingFeature("ExistentialAny"),
-        .enableUpcomingFeature("InternalImportsByDefault"),
-        .enableUpcomingFeature("MemberImportVisibility"),
-        .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-        .enableUpcomingFeature("InferIsolatedConformances"),
-        .enableExperimentalFeature("Lifetimes"),
-        .treatAllWarnings(as: .error),
-    ]
+    target.swiftSettings =
+        (target.swiftSettings ?? []) + [
+            .strictMemorySafety(),
+            .enableUpcomingFeature("ExistentialAny"),
+            .enableUpcomingFeature("InternalImportsByDefault"),
+            .enableUpcomingFeature("MemberImportVisibility"),
+            .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            .enableUpcomingFeature("InferIsolatedConformances"),
+            .enableExperimentalFeature("Lifetimes"),
+            .treatAllWarnings(as: .error),
+        ]
 }

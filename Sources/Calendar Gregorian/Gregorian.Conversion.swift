@@ -11,17 +11,26 @@ extension Gregorian.Conversion {
 
     public static func secondsSinceEpoch(from components: Gregorian.DateTime) -> Int {
         secondsSinceEpoch(
-            year: components.year, month: components.month, day: components.day,
-            hour: components.hour, minute: components.minute, second: components.second
+            year: components.year,
+            month: components.month,
+            day: components.day,
+            hour: components.hour,
+            minute: components.minute,
+            second: components.second
         )
     }
 
     static func secondsSinceEpoch(
-        year: Gregorian.Year, month: Gregorian.Month, day: Gregorian.Month.Day,
-        hour: Time.Day.Hour, minute: Time.Hour.Minute, second: Time.Minute.Second
+        year: Gregorian.Year,
+        month: Gregorian.Month,
+        day: Gregorian.Month.Day,
+        hour: Time.Day.Hour,
+        minute: Time.Hour.Minute,
+        second: Time.Minute.Second
     ) -> Int {
         let days = Gregorian.fixedDay(year: year, month: month, day: day) - unixEpochDay
-        let seconds = days * Int128(Time.Conversion.secondsPerDay)
+        let seconds =
+            days * Int128(Time.Conversion.secondsPerDay)
             + Int128(Time.Conversion.seconds(hour: hour, minute: minute, second: second))
         guard let result = Int(exactly: seconds) else {
             preconditionFailure("Gregorian date does not fit the Unix seconds coordinate")
@@ -47,7 +56,9 @@ extension Gregorian.Conversion {
     }
 
     static func daysSinceEpoch(
-        year: Gregorian.Year, month: Gregorian.Month, day: Gregorian.Month.Day
+        year: Gregorian.Year,
+        month: Gregorian.Month,
+        day: Gregorian.Month.Day
     ) -> Int {
         let days = Gregorian.fixedDay(year: year, month: month, day: day) - unixEpochDay
         guard let result = Int(exactly: days) else {

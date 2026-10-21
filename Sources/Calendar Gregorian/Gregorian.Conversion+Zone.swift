@@ -1,11 +1,11 @@
+public import Calendar
 internal import Cardinal
 internal import Difference
 internal import Magnitude
 internal import Polarity
 internal import Tagged
-internal import Translation
-public import Calendar
 public import Time
+internal import Translation
 
 extension Gregorian.Conversion {
 
@@ -14,13 +14,16 @@ extension Gregorian.Conversion {
         in zone: Time.Zone = .utc
     ) throws(Error) -> Time.Instant {
         guard local.second.value < 60 else { throw .unsupportedLeapSecond }
-        let days = Gregorian.fixedDay(year: local.year, month: local.month, day: local.day)
+        let days =
+            Gregorian.fixedDay(year: local.year, month: local.month, day: local.day)
             - unixEpochDay
-        let seconds = days * Int128(Time.Conversion.secondsPerDay)
+        let seconds =
+            days * Int128(Time.Conversion.secondsPerDay)
             + Int128(Time.Conversion.seconds(hour: local.hour, minute: local.minute, second: local.second))
         guard let seconds = Int64(exactly: seconds) else { throw .overflow }
         let coordinate = Time.Instant(
-            _unchecked: (), secondsSinceUnixEpoch: seconds,
+            _unchecked: (),
+            secondsSinceUnixEpoch: seconds,
             nanosecondFraction: Int32(local.totalNanoseconds)
         )
         do {
@@ -43,7 +46,8 @@ extension Gregorian.Conversion {
 
         guard let seconds = Int(exactly: local.secondsSinceUnixEpoch) else { throw .overflow }
         return Gregorian.DateTime(
-            _unchecked: (), secondsSinceEpoch: seconds,
+            _unchecked: (),
+            secondsSinceEpoch: seconds,
             nanoseconds: Int(instant.nanosecondFraction)
         )
     }
@@ -63,7 +67,8 @@ extension Calendar::DateTime where Date == Gregorian.Date {
     }
 
     public init(
-        instant: Time.Instant, in zone: Time.Zone = .utc
+        instant: Time.Instant,
+        in zone: Time.Zone = .utc
     ) throws(Gregorian.Conversion.Error) {
         self = try Gregorian.Conversion.dateTime(from: instant, in: zone)
     }

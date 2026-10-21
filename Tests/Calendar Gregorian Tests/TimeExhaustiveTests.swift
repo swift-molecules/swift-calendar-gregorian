@@ -1,8 +1,8 @@
 import Testing
 
-@_spi(Internal) @testable import Time
 @_spi(Internal) @testable import Calendar
 @_spi(Internal) @testable import Calendar_Gregorian
+@_spi(Internal) @testable import Time
 
 @Suite
 struct `Time Exhaustive Tests` {
@@ -269,8 +269,7 @@ struct `Time Exhaustive Tests` {
             (500, 500, 500, 500_500_500),
         ]
     )
-    func `Total Nanoseconds - Calculation accuracy`(ms: Int, us: Int, ns: Int, expected: Int) throws
-    {
+    func `Total Nanoseconds - Calculation accuracy`(ms: Int, us: Int, ns: Int, expected: Int) throws {
         let time = try GregorianDateTime(
             year: 2024,
             month: 1,

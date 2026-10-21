@@ -1,9 +1,9 @@
 import Calendar
+import Calendar_Gregorian
 import Cardinal
+import Difference
 import Magnitude
 import Tagged
-import Calendar_Gregorian
-import Difference
 import Testing
 import Time
 
@@ -60,7 +60,12 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
 
     @Test func exactUniformCoordinateRejectsLeapSecondLabels() throws {
         let leapSecond = try Gregorian.DateTime(
-            year: 2016, month: .december, day: 31, hour: 23, minute: 59, second: 60
+            year: 2016,
+            month: .december,
+            day: 31,
+            hour: 23,
+            minute: 59,
+            second: 60
         )
         #expect(leapSecond.second.value == 60)
         for offset in [-3_600, 0, 3_600] {
@@ -107,7 +112,6 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         }
     }
 }
-
 
 extension FixedZoneTests {
     @Test func offsetsLargerThanInt64RetainTheirFullDomain() throws {

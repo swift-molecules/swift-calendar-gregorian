@@ -1,8 +1,8 @@
+import Calendar
+import Calendar_Gregorian
 import Foundation
 import Testing
 import Time
-import Calendar
-import Calendar_Gregorian
 
 @Suite struct ExtractionTests {
     @Test func aDayCannotCarryValidityFromAnotherMonth() throws {
@@ -22,7 +22,7 @@ import Calendar_Gregorian
     @Test func everyNamedEpochAndCustomReferenceSurvives() throws {
         let origins: [(Gregorian.Epoch, Int, Int, Int)] = [
             (.unix, 1970, 1, 1), (.ntp, 1900, 1, 1), (.gps, 1980, 1, 6),
-            (.tai, 1958, 1, 1), (.windowsFileTime, 1601, 1, 1), (.appleAbsolute, 2001, 1, 1)
+            (.tai, 1958, 1, 1), (.windowsFileTime, 1601, 1, 1), (.appleAbsolute, 2001, 1, 1),
         ]
         for (epoch, year, month, day) in origins {
             #expect(epoch.referenceDate.year.rawValue == year)
@@ -31,8 +31,15 @@ import Calendar_Gregorian
             #expect(epoch == Time.Epoch(referenceDate: epoch.referenceDate))
         }
         let reference = try GregorianDateTime(
-            year: 2024, month: 2, day: 29, hour: 12, minute: 30, second: 15,
-            millisecond: 123, microsecond: 456, nanosecond: 789
+            year: 2024,
+            month: 2,
+            day: 29,
+            hour: 12,
+            minute: 30,
+            second: 15,
+            millisecond: 123,
+            microsecond: 456,
+            nanosecond: 789
         )
         let epoch = Time.Epoch(referenceDate: reference)
         #expect(epoch.referenceDate == reference)
@@ -61,7 +68,6 @@ import Calendar_Gregorian
         #expect(GregorianDateTime(secondsSinceEpoch: last.secondsSinceEpoch + 7 * Time.Conversion.secondsPerDay).weekday == last.weekday)
     }
 }
-
 
 extension ExtractionTests {
     @Test func rawMonthConstructionUsesTheJointValidationBoundary() throws {

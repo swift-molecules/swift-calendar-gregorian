@@ -1,9 +1,9 @@
 import Foundation
 import Testing
 
-@_spi(Internal) @testable import Time
 @_spi(Internal) @testable import Calendar
 @_spi(Internal) @testable import Calendar_Gregorian
+@_spi(Internal) @testable import Time
 
 @Suite
 struct `Time Property-Based Tests` {
@@ -99,8 +99,7 @@ struct `Time Property-Based Tests` {
     @Test(
         arguments: generateTestDates()
     )
-    func `Property: Weekday calculation matches Foundation`(year: Int, month: Int, day: Int) throws
-    {
+    func `Property: Weekday calculation matches Foundation`(year: Int, month: Int, day: Int) throws {
         let weekday = try Gregorian.Weekday(year: year, month: month, day: day)
 
         var calendar = Foundation.Calendar(identifier: .gregorian)
