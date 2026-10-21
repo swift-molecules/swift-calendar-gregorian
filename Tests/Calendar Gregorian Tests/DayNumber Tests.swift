@@ -52,7 +52,7 @@ import Time
         let march = try Gregorian.Date(year: 2024, month: .march, day: 1)
         #expect(try calendar.adding(days: 2, to: february) == march)
         #expect(try calendar.distance(from: february, to: march).underlying == Difference(2))
-        let identity = Calendar<DayNumber>(dayNumber: { $0 }, date: { $0 })
+        let identity = Calendar<DayNumber>(dayNumber: { current throws(Calendar<DayNumber>.Encode.Error) in current }, date: { current throws(Calendar<DayNumber>.Decode.Error) in current })
         #expect(try identity.convert(calendar.convert(march, to: identity), to: calendar) == march)
     }
 
