@@ -1,6 +1,6 @@
 # swift-calendar-gregorian
 
-Use this package when you need civil dates in the proleptic Gregorian calendar: validating year–month–day values, counting and adding days, months and years, finding weekdays, and converting between a local `Gregorian.DateTime` and a `Time.Instant` in a `Time.Zone` or `Time.Zone.Rule`. Start from `Gregorian.Date` for dates, `Gregorian.DateTime` for date and clock time, and `Gregorian.calendar()` for the `Calendar<Gregorian.Date>` value that maps dates to `DayNumber`. For calendar-independent day arithmetic use the `Calendar` package (swift-calendar), and for instants, durations and zones without a calendar use the `Time` package (swift-time).
+Use this package when you need civil dates in the proleptic Gregorian calendar: validating year-month-day values, counting and adding days, months and years, finding weekdays, and converting between a local `Gregorian.DateTime` and a `Time.Instant` in a `Time.Zone` or `Time.Zone.Rule`. Start from `Gregorian.Date` for dates, `Gregorian.DateTime` for date and clock time, and `Gregorian.calendar()` for the `Calendar<Gregorian.Date>` value that maps dates to `DayNumber`. For calendar-independent day arithmetic use the `Calendar` package (swift-calendar), and for instants, durations and zones without a calendar use the `Time` package (swift-time).
 
 ## Laws
 
