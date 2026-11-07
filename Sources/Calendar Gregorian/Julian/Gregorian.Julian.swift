@@ -35,7 +35,6 @@
         public static func from(_ instant: Time.Instant) -> Self { Self(instant) }
 
         public init(_ dateTime: Gregorian.DateTime) throws(Gregorian.Julian.Error) {
-            // Revalidate even values received through an unchecked construction API.
             do {
                 _ = try Gregorian.DateTime(
                     year: dateTime.year.rawValue,

@@ -63,7 +63,7 @@ struct `Time Exhaustive Tests` {
         let year = Gregorian.Year(2024)
         let expected = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-        for month in 1...12 {
+        (1...12).forEach { month in
             let days = Gregorian.daysInMonth(year, Gregorian.Month(unchecked: month))
             #expect(
                 days == expected[month - 1],
@@ -77,7 +77,7 @@ struct `Time Exhaustive Tests` {
         let year = Gregorian.Year(2023)
         let expected = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-        for month in 1...12 {
+        (1...12).forEach { month in
             let days = Gregorian.daysInMonth(year, Gregorian.Month(unchecked: month))
             #expect(
                 days == expected[month - 1],

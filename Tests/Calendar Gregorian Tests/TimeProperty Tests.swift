@@ -22,7 +22,7 @@ struct `Time Property-Based Tests` {
                 ? [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
                 : [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-            for month in 1...12 {
+            (1...12).forEach { month in
 
                 let maxDay = daysInMonths[month - 1]
                 let testDays = [1, maxDay / 2, maxDay]
