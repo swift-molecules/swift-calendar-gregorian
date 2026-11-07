@@ -8,17 +8,24 @@
         /// day number 1 (Gregorian 0001-01-01 midnight) is JD 1721425.5.
         /// Tagged Double storage preserves day/offset identity, not nanosecond precision.
         public enum Julian {
-            public enum DayDomain {}
-            public enum OffsetDomain {}
-            public typealias Day = Tagged<DayDomain, Double>
-            public typealias Offset = Tagged<OffsetDomain, Double>
-            public enum Error: Swift::Error, Equatable, Sendable {
-                case nonfinite
-                case unrepresentable
-                case invalidCalendar
-            }
         }
     }
+
+extension Gregorian.Julian {
+        public enum DayDomain {}
+
+        public enum OffsetDomain {}
+
+        public typealias Day = Tagged<DayDomain, Double>
+
+        public typealias Offset = Tagged<OffsetDomain, Double>
+
+        public enum Error: Swift::Error, Equatable, Sendable {
+            case nonfinite
+            case unrepresentable
+            case invalidCalendar
+        }
+}
 
     extension Tagged where Tag == Gregorian.Julian.DayDomain, Underlying == Double {
         public static var unixEpoch: Self { .init(_unchecked: 2_440_587.5) }
