@@ -52,8 +52,8 @@ let package = Package(
         .testTarget(
             name: "Gregorian Julian Tests",
             dependencies: [
-                .target(name: "Calendar Gregorian"), .product(name: "Calendar", package: "swift-calendar"), .product(name: "Time", package: "swift-time"),
-                .product(name: "Tagged", package: "swift-tagged"),
+                .target(name: "Calendar Gregorian"), .product(name: "Calendar", package: "swift-calendar", condition: .when(traits: ["Julian"])), .product(name: "Time", package: "swift-time", condition: .when(traits: ["Julian"])),
+                .product(name: "Tagged", package: "swift-tagged", condition: .when(traits: ["Julian"])),
             ],
             path: "Tests/Gregorian Julian Tests"
         ),
