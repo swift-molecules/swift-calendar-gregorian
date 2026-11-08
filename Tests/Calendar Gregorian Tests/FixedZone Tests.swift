@@ -12,7 +12,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
 }
 
 @Suite struct FixedZoneTests {
-    @Test func fixedOffsetsHaveTheExpectedDirectionAcrossMidnightAndYearBoundaries() throws {
+    @Test func `fixed offsets have the expected direction across midnight and year boundaries`() throws {
         let epoch = Time.Instant(secondsSinceUnixEpoch: 0)
         let west = try epoch.gregorian(in: fixedZone(-30))
         #expect(west.year.rawValue == 1969)
@@ -40,7 +40,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         #expect(utc.minute.value == 15)
     }
 
-    @Test func exactRoundTripsPreserveFractionsAndSignedOffsets() throws {
+    @Test func `exact round trips preserve fractions and signed offsets`() throws {
         let offsets = [-86_401, -20_700, -1_800, -30, -1, 0, 1, 30, 1_800, 20_700, 86_401]
         let seconds: [Int64] = [-2_208_988_800, -86_401, -1, 0, 1, 86_399, 951_782_400]
         for offset in offsets {
@@ -58,7 +58,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         }
     }
 
-    @Test func exactUniformCoordinateRejectsLeapSecondLabels() throws {
+    @Test func `exact uniform coordinate rejects leap second labels`() throws {
         let leapSecond = try Gregorian.DateTime(
             year: 2016,
             month: .december,
@@ -75,7 +75,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         }
     }
 
-    @Test func fullUnixCoordinateEndpointsRoundTripExactlyInUTC() throws {
+    @Test func `full unix coordinate endpoints round trip exactly in UTC`() throws {
         for seconds in [Int64.min, .min + 1, .max - 1, .max] {
             for fraction in [Int32(0), 1, 999_999_999] {
                 let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: fraction)
@@ -84,7 +84,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         }
     }
 
-    @Test func overflowingFixedTranslationsReportErrorsInEitherDirection() throws {
+    @Test func `overflowing fixed translations report errors in either direction`() throws {
         let maximum = Time.Instant(secondsSinceUnixEpoch: .max)
         let minimum = Time.Instant(secondsSinceUnixEpoch: .min)
         #expect(throws: Gregorian.Conversion.Error.overflow) {
@@ -105,7 +105,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         #expect(try minimum.gregorian(in: fixedZone(1)).instant(in: fixedZone(1)) == minimum)
     }
 
-    @Test func GregorianYearsOutsideUnixCoordinateRangeReportErrors() throws {
+    @Test func `gregorian years outside unix coordinate range report errors`() throws {
         for year in [Int.min, Int.max] {
             let local = try Gregorian.DateTime(year: year, month: .january, day: 1)
             #expect(throws: Gregorian.Conversion.Error.overflow) { try local.instant() }
@@ -114,7 +114,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
 }
 
 extension FixedZoneTests {
-    @Test func offsetsLargerThanInt64RetainTheirFullDomain() throws {
+    @Test func `offsets larger than int 64 retain their full domain`() throws {
         let span = Difference.positive(Difference.Magnitude(Cardinal(UInt.max)))
         let east = Time.Zone(offset: Time.Second.offset(span))
         let west = Time.Zone(offset: Time.Second.offset(-span))

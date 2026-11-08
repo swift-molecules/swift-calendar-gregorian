@@ -8,7 +8,7 @@ import Testing
 import Time
 
 @Suite struct DayNumberTests {
-    @Test func knownFixedDayAnchors() throws {
+    @Test func `known fixed day anchors`() throws {
         let calendar = Gregorian.calendar()
         let anchors: [(Int, Gregorian.Month, Int, Int64)] = [
             (0, .january, 1, -365), (0, .december, 31, 0), (1, .january, 1, 1),
@@ -22,7 +22,7 @@ import Time
         }
     }
 
-    @Test func inverseAcrossACompleteFourHundredYearCycle() throws {
+    @Test func `inverse across a complete four hundred year cycle`() throws {
         let calendar = Gregorian.calendar()
         for value in Int64(-146_097)...0 {
             let day = DayNumber(rawValue: value)
@@ -32,13 +32,13 @@ import Time
     }
 
     @Test(arguments: [Int64.min, -1, 0, 1, Int64.max])
-    func coordinateEndpointsRoundTrip(value: Int64) throws {
+    func `coordinate endpoints round trip`(value: Int64) throws {
         let calendar = Calendar<Gregorian.Date>.gregorian()
         let day = DayNumber(rawValue: value)
         #expect(try calendar.dayNumber(of: calendar.date(on: day)) == day)
     }
 
-    @Test func datesOutsideCoordinateRangeReportFailure() throws {
+    @Test func `dates outside coordinate range report failure`() throws {
         let calendar = Gregorian.calendar()
         for year in [Int.min, Int.max] {
             let date = try Gregorian.Date(year: .init(year), month: .january, day: 1)
@@ -46,7 +46,7 @@ import Time
         }
     }
 
-    @Test func dayArithmeticCrossesMonthAndLeapBoundaries() throws {
+    @Test func `day arithmetic crosses month and leap boundaries`() throws {
         let calendar = Gregorian.calendar()
         let february = try Gregorian.Date(year: 2024, month: .february, day: 28)
         let march = try Gregorian.Date(year: 2024, month: .march, day: 1)
@@ -57,12 +57,12 @@ import Time
     }
 
     @Test(arguments: [Int64.min, Int64.max])
-    func unixEndpointRoundTripsAfterCoordinateComposition(seconds: Int64) throws {
+    func `unix endpoint round trips after coordinate composition`(seconds: Int64) throws {
         let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
         #expect(Time.Instant(Gregorian.DateTime(instant)) == instant)
     }
 
-    @Test func fullCoordinateDistanceRemainsARepresentableTypedDisplacement() throws {
+    @Test func `full coordinate distance remains a representable typed displacement`() throws {
         let minimum = DayNumber(rawValue: .min)
         let maximum = DayNumber(rawValue: .max)
         let distance = minimum.distance(to: maximum)

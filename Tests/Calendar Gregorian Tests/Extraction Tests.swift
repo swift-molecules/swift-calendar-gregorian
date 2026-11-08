@@ -5,7 +5,7 @@ import Testing
 import Time
 
 @Suite struct ExtractionTests {
-    @Test func aDayCannotCarryValidityFromAnotherMonth() throws {
+    @Test func `a day cannot carry validity from another month`() throws {
         let day = try Gregorian.Month.Day(31, in: .january, year: 2024)
         #expect(throws: Gregorian.Month.Day.Error.self) {
             try Gregorian.Date(year: 2024, month: .february, day: day)
@@ -19,7 +19,7 @@ import Time
         }
     }
 
-    @Test func everyNamedEpochAndCustomReferenceSurvives() throws {
+    @Test func `every named epoch and custom reference survives`() throws {
         let origins: [(Gregorian.Epoch, Int, Int, Int)] = [
             (.unix, 1970, 1, 1), (.ntp, 1900, 1, 1), (.gps, 1980, 1, 6),
             (.tai, 1958, 1, 1), (.windowsFileTime, 1601, 1, 1), (.appleAbsolute, 2001, 1, 1),
@@ -46,7 +46,7 @@ import Time
     }
 
     @Test(arguments: [Int64(-1), 0, 1, 1_704_067_200])
-    func fractionalInstantAndEncodingRoundTrip(seconds: Int64) throws {
+    func `fractional instant and encoding round trip`(seconds: Int64) throws {
         let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
         let civil = GregorianDateTime(instant)
         #expect(Time.Instant(civil) == instant)
@@ -59,7 +59,7 @@ import Time
         #expect(try GregorianDateTime(JSONDecoder().decode(Time.Instant.self, from: encoder.encode(Time.Instant(civil)))) == civil)
     }
 
-    @Test func weekdayUsesTheGregorianDayCoordinateAcrossNegativeYears() throws {
+    @Test func `weekday uses the gregorian day coordinate across negative years`() throws {
         let last = try GregorianDateTime(year: -497, month: 12, day: 31, hour: 0, minute: 0, second: 0)
         let next = GregorianDateTime(secondsSinceEpoch: last.secondsSinceEpoch + Time.Conversion.secondsPerDay)
         let week: [Gregorian.Weekday] = [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
@@ -70,7 +70,7 @@ import Time
 }
 
 extension ExtractionTests {
-    @Test func rawMonthConstructionUsesTheJointValidationBoundary() throws {
+    @Test func `raw month construction uses the joint validation boundary`() throws {
         for value in -1...14 {
             let month = Gregorian.Month(rawValue: value)
             if (1...12).contains(value) {
