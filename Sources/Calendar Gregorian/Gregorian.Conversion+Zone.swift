@@ -13,7 +13,6 @@ extension Gregorian.Conversion {
         from local: Gregorian.DateTime,
         in zone: Time.Zone = .utc
     ) throws(Error) -> Time.Instant {
-        guard local.second.value < 60 else { throw .unsupportedLeapSecond }
         let days =
             Gregorian.fixedDay(year: local.year, month: local.month, day: local.day)
             - unixEpochDay

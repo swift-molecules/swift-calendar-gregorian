@@ -212,10 +212,13 @@ extension `TimeExhaustive Tests` {
         }
 
         @Test
-        func `Second Validation - Boundary Cases Including Leap Second`() throws {
+        func `Second Validation - Boundary Cases Without Leap Second`() throws {
 
-            for second in 0...60 {
+            for second in 0...59 {
                 _ = try Time.Minute.Second(second)
+            }
+            #expect(throws: Time.Minute.Second.Error.invalidSecond(60)) {
+                try Time.Minute.Second(60)
             }
 
             #expect(throws: Time.Minute.Second.Error.self) {
@@ -359,7 +362,9 @@ extension `TimeExhaustive Tests` {
             }
 
             _ = try GregorianDateTime(year: 2024, month: 1, day: 1, hour: 23, minute: 59, second: 59)
-            _ = try GregorianDateTime(year: 2024, month: 1, day: 1, hour: 23, minute: 59, second: 60)
+            #expect(throws: GregorianDateTime.Error.self) {
+                try GregorianDateTime(year: 2024, month: 1, day: 1, hour: 23, minute: 59, second: 60)
+            }
         }
     }
 }

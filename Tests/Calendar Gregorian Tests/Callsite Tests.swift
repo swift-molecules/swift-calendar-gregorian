@@ -17,7 +17,8 @@ extension `Callsite Tests` {
             #expect(try Time.Hour.Minute(45).value == 45)
             #expect(throws: Time.Hour.Minute.Error.self) { try Time.Hour.Minute(90) }
             #expect(try Time.Day.Hour(23).value == 23)
-            #expect(try Time.Minute.Second(60).value == 60)
+            #expect(try Time.Minute.Second(59).value == 59)
+            #expect(throws: Time.Minute.Second.Error.invalidSecond(60)) { try Time.Minute.Second(60) }
         }
 
         @Test func `civil dates and timeline arithmetic use direct callsites`() throws {

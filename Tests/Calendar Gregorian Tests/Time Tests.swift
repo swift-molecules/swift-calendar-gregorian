@@ -148,15 +148,9 @@ extension `Time Tests` {
                 try GregorianDateTime(year: 2024, month: 1, day: 1, hour: 0, minute: 0, second: 0, nanosecond: 1000)
             }
 
-            let leapSecond = try GregorianDateTime(
-                year: 2024,
-                month: 1,
-                day: 1,
-                hour: 23,
-                minute: 59,
-                second: 60
-            )
-            #expect(leapSecond.second.value == 60)
+            #expect(throws: GregorianDateTime.Error.secondOutOfRange(60)) {
+                try GregorianDateTime(year: 2024, month: 1, day: 1, hour: 23, minute: 59, second: 60)
+            }
         }
 
         @Test

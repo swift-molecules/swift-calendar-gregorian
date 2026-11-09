@@ -48,7 +48,6 @@
                     nanosecond: dateTime.nanosecond.value
                 )
             } catch { throw .invalidCalendar }
-            guard dateTime.second.value < 60 else { throw .invalidCalendar }
             let day: DayNumber
             do { day = try Gregorian.dayNumber(of: dateTime.date) } catch { throw .unrepresentable }
             let seconds = Double(dateTime.hour.value * 3600 + dateTime.minute.value * 60 + dateTime.second.value)

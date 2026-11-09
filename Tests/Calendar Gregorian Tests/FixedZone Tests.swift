@@ -58,20 +58,14 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         }
     }
 
-    @Test func `exact uniform coordinate rejects leap second labels`() throws {
-        let leapSecond = try Gregorian.DateTime(
-            year: 2016,
-            month: .december,
-            day: 31,
-            hour: 23,
-            minute: 59,
-            second: 60
-        )
-        #expect(leapSecond.second.value == 60)
+    @Test func `uniform days reject the leap second label`() throws {
+        #expect(throws: Gregorian.DateTime.Error.secondOutOfRange(60)) {
+            try Gregorian.DateTime(year: 2016, month: .december, day: 31, hour: 23, minute: 59, second: 60)
+        }
+        let last = try Gregorian.DateTime(year: 2016, month: .december, day: 31, hour: 23, minute: 59, second: 59)
+        let midnight = try Gregorian.DateTime(year: 2017, month: .january, day: 1, hour: 0, minute: 0, second: 0)
         for offset in [-3_600, 0, 3_600] {
-            #expect(throws: Gregorian.Conversion.Error.unsupportedLeapSecond) {
-                try leapSecond.instant(in: fixedZone(offset))
-            }
+            #expect(try midnight.instant(in: fixedZone(offset)) - last.instant(in: fixedZone(offset)) == .seconds(1))
         }
     }
 
