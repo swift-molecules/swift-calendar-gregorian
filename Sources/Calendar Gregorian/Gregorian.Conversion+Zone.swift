@@ -13,13 +13,7 @@ extension Gregorian.Conversion {
         from local: Gregorian.DateTime,
         in zone: Time.Zone = .utc
     ) throws(Error) -> Time.Instant {
-        let days =
-            Gregorian.fixedDay(year: local.year, month: local.month, day: local.day)
-            - unixEpochDay
-        let seconds =
-            days * Int128(Time.Conversion.secondsPerDay)
-            + Int128(Time.Conversion.seconds(hour: local.hour, minute: local.minute, second: local.second))
-        guard let seconds = Int64(exactly: seconds) else { throw .overflow }
+        guard let seconds = Int64(exactly: secondsSinceEpoch(from: local)) else { throw .overflow }
         let coordinate = Time.Instant(
             _unchecked: (),
             secondsSinceUnixEpoch: seconds,

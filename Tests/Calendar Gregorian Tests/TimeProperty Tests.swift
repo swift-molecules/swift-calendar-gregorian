@@ -89,7 +89,7 @@ extension `TimeProperty Tests` {
             let original = try GregorianDateTime(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
 
             let epochSeconds = Gregorian.Conversion.secondsSinceEpoch(from: original)
-            let roundTrip = GregorianDateTime(secondsSinceEpoch: epochSeconds)
+            let roundTrip = GregorianDateTime(secondsSinceEpoch: Int(epochSeconds))
 
             #expect(roundTrip.year.rawValue == original.year.rawValue)
             #expect(roundTrip.month == original.month)
@@ -183,7 +183,7 @@ extension `TimeProperty Tests` {
                 "Epoch mismatch for \(date.year)-\(date.month)-\(date.day) \(time.hour):\(time.minute):\(time.second)"
             )
 
-            let roundTrip = GregorianDateTime(secondsSinceEpoch: ourSeconds)
+            let roundTrip = GregorianDateTime(secondsSinceEpoch: Int(ourSeconds))
             #expect(roundTrip.year.rawValue == date.year)
             #expect(roundTrip.month == date.month)
             #expect(roundTrip.day == date.day)

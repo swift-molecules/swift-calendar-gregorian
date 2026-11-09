@@ -49,7 +49,7 @@ import Time
     func `fractional instant and encoding round trip`(seconds: Int64) throws {
         let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
         let civil = GregorianDateTime(instant)
-        #expect(Time.Instant(civil) == instant)
+        #expect(try Time.Instant(civil) == instant)
         #expect(civil.millisecond.value == 123)
         #expect(civil.microsecond.value == 456)
         #expect(civil.nanosecond.value == 789)
@@ -61,11 +61,11 @@ import Time
 
     @Test func `weekday uses the gregorian day coordinate across negative years`() throws {
         let last = try GregorianDateTime(year: -497, month: 12, day: 31, hour: 0, minute: 0, second: 0)
-        let next = GregorianDateTime(secondsSinceEpoch: last.secondsSinceEpoch + Time.Conversion.secondsPerDay)
+        let next = GregorianDateTime(secondsSinceEpoch: Int(last.secondsSinceEpoch) + Time.Conversion.secondsPerDay)
         let week: [Gregorian.Weekday] = [.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday]
         let index = try #require(week.firstIndex(of: last.weekday))
         #expect(next.weekday == week[(index + 1) % 7])
-        #expect(GregorianDateTime(secondsSinceEpoch: last.secondsSinceEpoch + 7 * Time.Conversion.secondsPerDay).weekday == last.weekday)
+        #expect(GregorianDateTime(secondsSinceEpoch: Int(last.secondsSinceEpoch) + 7 * Time.Conversion.secondsPerDay).weekday == last.weekday)
     }
 }
 

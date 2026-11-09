@@ -75,7 +75,7 @@ extension GregorianConversionTests {
         let time = try GregorianDateTime(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
         let ourSeconds = Gregorian.Conversion.secondsSinceEpoch(from: time)
 
-        let roundTrip = GregorianDateTime(secondsSinceEpoch: ourSeconds)
+        let roundTrip = GregorianDateTime(secondsSinceEpoch: Int(ourSeconds))
 
         #expect(roundTrip.year.rawValue == year)
         #expect(roundTrip.month.rawValue == month)
@@ -157,7 +157,7 @@ extension GregorianConversionTests {
         #expect(firstDayOfMinus496 == lastDayOfMinus497 + 1)
 
         let (backYear, backMonth, backDay, _, _, _) = Gregorian.Conversion.componentsRaw(
-            fromSecondsSinceEpoch: firstDayOfMinus496
+            fromSecondsSinceEpoch: Int(firstDayOfMinus496)
                 * Gregorian.TimeConstants.secondsPerDay
         )
         #expect((backYear, backMonth, backDay) == (-496, 1, 1))

@@ -52,7 +52,7 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
                     #expect(try local.instant(in: zone) == instant)
                     #expect(try Gregorian.DateTime(instant: instant, in: zone) == local)
                     #expect(local.totalNanoseconds == Int(fraction))
-                    #expect(local.secondsSinceEpoch == Int(value) + offset)
+                    #expect(local.secondsSinceEpoch == Int128(value) + Int128(offset))
                 }
             }
         }
@@ -103,7 +103,17 @@ private func fixedZone(_ seconds: Int) -> Time.Zone {
         for year in [Int.min, Int.max] {
             let local = try Gregorian.DateTime(year: year, month: .january, day: 1)
             #expect(throws: Gregorian.Conversion.Error.overflow) { try local.instant() }
+            #expect(throws: Gregorian.Conversion.Error.overflow) { try Time.Instant(local) }
         }
+    }
+
+    @Test func `seconds since epoch are total for every gregorian year`() throws {
+        let latest = try Gregorian.DateTime(year: Int.max, month: .december, day: 31, hour: 23, minute: 59, second: 59)
+        let earliest = try Gregorian.DateTime(year: Int.min, month: .january, day: 1)
+        #expect(latest.secondsSinceEpoch > Int128(Int.max))
+        #expect(earliest.secondsSinceEpoch < Int128(Int.min))
+        let next = try Gregorian.DateTime(year: Int.max - 1, month: .december, day: 31, hour: 23, minute: 59, second: 59)
+        #expect(latest.secondsSinceEpoch - next.secondsSinceEpoch == 365 * 86_400)
     }
 }
 
@@ -115,10 +125,10 @@ extension FixedZoneTests {
         let first = try Time.Instant(secondsSinceUnixEpoch: .min, nanosecondFraction: 123_456_789)
         let last = try Time.Instant(secondsSinceUnixEpoch: .max, nanosecondFraction: 123_456_789)
         let localLast = try first.gregorian(in: east)
-        #expect(Time.Instant(localLast) == last)
+        #expect(try Time.Instant(localLast) == last)
         #expect(try localLast.instant(in: east) == first)
         let localFirst = try last.gregorian(in: west)
-        #expect(Time.Instant(localFirst) == first)
+        #expect(try Time.Instant(localFirst) == first)
         #expect(try localFirst.instant(in: west) == last)
         #expect(throws: Gregorian.Conversion.Error.overflow) { try last.gregorian(in: east) }
         #expect(throws: Gregorian.Conversion.Error.overflow) { try first.gregorian(in: west) }

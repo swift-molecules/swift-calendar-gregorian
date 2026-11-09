@@ -240,11 +240,11 @@ extension Calendar::DateTime where Date == Gregorian.Date {
         Gregorian.Weekday(year: year, month: month, day: day)
     }
 
-    public var secondsSinceEpoch: Int {
+    public var secondsSinceEpoch: Int128 {
         Self.secondsSinceEpoch(from: self)
     }
 
-    public static func secondsSinceEpoch(from time: Self) -> Int {
+    public static func secondsSinceEpoch(from time: Self) -> Int128 {
         Gregorian.Conversion.secondsSinceEpoch(from: time)
     }
 }

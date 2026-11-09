@@ -199,7 +199,7 @@ extension `TimeFoundation Tests` {
                         "Mismatch on \(year)-\(month)-\(day): ours=\(ourSeconds) foundation=\(foundationSeconds)"
                     )
 
-                    let roundTrip = GregorianDateTime(secondsSinceEpoch: ourSeconds)
+                    let roundTrip = GregorianDateTime(secondsSinceEpoch: Int(ourSeconds))
                     #expect(roundTrip.year.rawValue == year)
                     #expect(roundTrip.month == month)
                     #expect(roundTrip.day == day)

@@ -175,7 +175,7 @@ extension `Time Tests` {
 
             let seconds = Gregorian.Conversion.secondsSinceEpoch(from: components)
 
-            let roundTrip = GregorianDateTime(secondsSinceEpoch: seconds)
+            let roundTrip = GregorianDateTime(secondsSinceEpoch: Int(seconds))
             #expect(roundTrip.year.rawValue == 2024)
             #expect(roundTrip.month == 1)
             #expect(roundTrip.day == 15)

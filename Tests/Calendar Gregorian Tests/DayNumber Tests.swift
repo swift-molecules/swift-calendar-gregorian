@@ -59,7 +59,7 @@ import Time
     @Test(arguments: [Int64.min, Int64.max])
     func `unix endpoint round trips after coordinate composition`(seconds: Int64) throws {
         let instant = try Time.Instant(secondsSinceUnixEpoch: seconds, nanosecondFraction: 123_456_789)
-        #expect(Time.Instant(Gregorian.DateTime(instant)) == instant)
+        #expect(try Time.Instant(Gregorian.DateTime(instant)) == instant)
     }
 
     @Test func `full coordinate distance remains a representable typed displacement`() throws {
