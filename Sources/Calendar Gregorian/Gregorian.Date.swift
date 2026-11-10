@@ -101,6 +101,13 @@ extension Gregorian.Date {
 
 extension Gregorian.Date {
 
+    public static func today(
+        in rule: Time.Zone.Rule,
+        at instant: Time.Instant
+    ) throws(Gregorian.Conversion.Error) -> Self {
+        try Gregorian.Conversion.dateTime(from: instant, in: rule).date
+    }
+
     public func start(in rule: Time.Zone.Rule) throws(Gregorian.Conversion.Error) -> Time.Instant {
         let days = Gregorian.fixedDay(year: year, month: month, day: day) - Gregorian.Conversion.unixEpochDay
         guard let seconds = Int64(exactly: days * Int128(Time.Conversion.secondsPerDay)) else {
