@@ -57,13 +57,6 @@ extension Gregorian.Conversion {
         }
     }
 
-    public static func dateTime(
-        from instant: Time.Instant,
-        in rule: Time.Zone.Rule
-    ) throws(Error) -> Gregorian.DateTime {
-        try dateTime(from: instant, in: rule.offset(at: instant))
-    }
-
     private static func duration(of zone: Time.Zone) -> Swift::Duration {
         let offset = zone.offset.underlying
         let magnitude = Int128(offset.magnitude.value.rawValue)
@@ -86,7 +79,7 @@ extension Calendar::DateTime where Date == Gregorian.Date {
         instant: Time.Instant,
         in rule: Time.Zone.Rule
     ) throws(Gregorian.Conversion.Error) {
-        self = try Gregorian.Conversion.dateTime(from: instant, in: rule)
+        self = try Gregorian.Conversion.dateTime(from: instant, in: rule.offset(at: instant))
     }
 
     public init(
@@ -107,6 +100,6 @@ extension Time.Instant {
     public func gregorian(
         in rule: Time.Zone.Rule
     ) throws(Gregorian.Conversion.Error) -> Gregorian.DateTime {
-        try Gregorian.Conversion.dateTime(from: self, in: rule)
+        try Gregorian.Conversion.dateTime(from: self, in: rule.offset(at: self))
     }
 }

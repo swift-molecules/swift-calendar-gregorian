@@ -105,7 +105,7 @@ extension Gregorian.Date {
         in rule: Time.Zone.Rule,
         at instant: Time.Instant
     ) throws(Gregorian.Conversion.Error) -> Self {
-        try Gregorian.Conversion.dateTime(from: instant, in: rule).date
+        try instant.gregorian(in: rule).date
     }
 
     public func start(in rule: Time.Zone.Rule) throws(Gregorian.Conversion.Error) -> Time.Instant {
